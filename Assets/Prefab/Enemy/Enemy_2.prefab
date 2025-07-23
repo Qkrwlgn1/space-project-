@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 4061313435562099707}
   - component: {fileID: 8797314294017403155}
   - component: {fileID: 3610595947692216116}
-  - component: {fileID: 3549923933235576072}
-  - component: {fileID: 2708027967060734975}
+  - component: {fileID: 6500137983905729246}
+  - component: {fileID: 8519907863428269376}
   m_Layer: 7
   m_Name: Enemy_2
   m_TagString: Enemy
@@ -142,10 +142,17 @@ MonoBehaviour:
   bulletSpawnPoint: {fileID: 4705606430147703698}
   moveSpeed: 2
   rotationSpeed: 50
+  minMoveWaitTime: 1
+  maxMoveWaitTime: 3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  avoidanceRadius: 1
+  avoidanceForce: 5
   screenBoundsPadding: 0.5
   spawnManager: {fileID: 0}
---- !u!61 &3549923933235576072
-BoxCollider2D:
+--- !u!70 &6500137983905729246
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -178,20 +185,11 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.008877456, y: 0.05674067}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.45698926, y: 0.5}
-    oldSize: {x: 1.86, y: 1.44}
-    newSize: {x: 1.86, y: 1.44}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1.7593247, y: 0.5778586}
-  m_EdgeRadius: 0
---- !u!61 &2708027967060734975
-BoxCollider2D:
+  m_Offset: {x: -0.0029705763, y: 0.0757553}
+  m_Size: {x: 0.45960832, y: 0.6513363}
+  m_Direction: 0
+--- !u!70 &8519907863428269376
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -224,18 +222,9 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0012636781, y: -0.0073118806}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.45698926, y: 0.5}
-    oldSize: {x: 1.86, y: 1.44}
-    newSize: {x: 1.86, y: 1.44}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.48426485, y: 1.1911432}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0.019570012, y: 0.13489594}
+  m_Size: {x: 1.118584, y: 0.24397448}
+  m_Direction: 1
 --- !u!1 &1540721942793318534
 GameObject:
   m_ObjectHideFlags: 0
