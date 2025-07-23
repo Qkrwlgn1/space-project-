@@ -7,9 +7,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigid;
     [SerializeField]
     private float moveSpeed;
+    [SerializeField]
+    private float minMoveSpeed;
 
     public GameObject explosionEffectPrefab;
     public GameObject bulletPrefab;
+    public Transform childObejct;
     public Transform bulletSpawnPoint;
     public EnemySpawnManager enemySpawnManager;
 
@@ -54,6 +57,23 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
+        if(y < 0)
+        {
+            childObejct.transform.localScale = new Vector3(1, 1, 1);
+            if(moveSpeed >= minMoveSpeed)
+            {
+                --moveSpeed;
+            }
+        }
+        else if (y > 0)
+        {
+            childObejct.transform.localScale = new Vector3(2, 2, 1);
+            if(moveSpeed < 7f)
+            {
+                ++moveSpeed;
+            }
+        }
+
         Vector2 moveDirection = new Vector2(x, y).normalized;
         rigid.linearVelocity = moveDirection * moveSpeed;
     }
