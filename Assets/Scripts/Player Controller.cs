@@ -75,7 +75,6 @@ public class PlayerController : MonoBehaviour
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
-
     public void TakeDamage(float damage)
     {
         playerCurrentHealth -= damage;
