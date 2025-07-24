@@ -863,6 +863,8 @@ MonoBehaviour:
   maxStage: 10
   maxAliveEnemies: 10
   isPlayerAlive: 1
+  stageClearDelay: 3
+  guaranteedItemPrefab: {fileID: 0}
 --- !u!4 &890979127
 Transform:
   m_ObjectHideFlags: 0

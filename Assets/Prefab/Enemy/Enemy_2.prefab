@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 2129762565794798028}
   - component: {fileID: 4061313435562099707}
   - component: {fileID: 8797314294017403155}
-  - component: {fileID: 3610595947692216116}
   - component: {fileID: 6500137983905729246}
   - component: {fileID: 8519907863428269376}
+  - component: {fileID: 3610595947692216116}
   m_Layer: 7
   m_Name: Enemy_2
   m_TagString: Enemy
@@ -120,37 +120,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &3610595947692216116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 461341101278608393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c0390c202bbbd740a2b4013140f6285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyHealth: 12
-  explosionEffectPrefab: {fileID: 725748389856807714, guid: 1dcde77d9c9f59747896a0fa460feeb6, type: 3}
-  enemyBulletPrefab: {fileID: 6576029860682959593, guid: 9f31b92f9ae301d47a0b8379492ae264, type: 3}
-  dropItemPrefab: {fileID: 820506492106638615, guid: 90542482164ea0047a9b6dbf24286c36, type: 3}
-  enemyFireDelay: 0.4
-  predictionTime: 0.5
-  isDropItem: 0
-  bulletSpawnPoint: {fileID: 4705606430147703698}
-  moveSpeed: 2
-  rotationSpeed: 50
-  minMoveWaitTime: 1
-  maxMoveWaitTime: 3
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  avoidanceRadius: 1
-  avoidanceForce: 5
-  screenBoundsPadding: 0.5
-  spawnManager: {fileID: 0}
 --- !u!70 &6500137983905729246
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -225,6 +194,40 @@ CapsuleCollider2D:
   m_Offset: {x: 0.019570012, y: 0.13489594}
   m_Size: {x: 1.118584, y: 0.24397448}
   m_Direction: 1
+--- !u!114 &3610595947692216116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461341101278608393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c0390c202bbbd740a2b4013140f6285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyHealth: 12
+  explosionEffectPrefab: {fileID: 725748389856807714, guid: 1dcde77d9c9f59747896a0fa460feeb6, type: 3}
+  enemyBulletPrefab: {fileID: 6576029860682959593, guid: 9f31b92f9ae301d47a0b8379492ae264, type: 3}
+  dropItemPrefab:
+  - {fileID: 820506492106638615, guid: 90542482164ea0047a9b6dbf24286c36, type: 3}
+  - {fileID: 820506492106638615, guid: 50c384b2a101d82498ddc9afbc9a451e, type: 3}
+  - {fileID: 820506492106638615, guid: ae506c07e6090dd43b6d797b7e9b01e7, type: 3}
+  enemyFireDelay: 0.4
+  predictionTime: 0.5
+  isDropItem: 1
+  bulletSpawnPoint: {fileID: 4705606430147703698}
+  moveSpeed: 2
+  rotationSpeed: 50
+  minMoveWaitTime: 1
+  maxMoveWaitTime: 3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  avoidanceRadius: 1
+  avoidanceForce: 5
+  screenBoundsPadding: 0.5
+  spawnManager: {fileID: 0}
 --- !u!1 &1540721942793318534
 GameObject:
   m_ObjectHideFlags: 0

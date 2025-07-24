@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // ... 기존 변수들은 그대로 ...
     [Header("Enemy Stats")]
     public float enemyHealth;
     private float enemyCurrentHealth;
@@ -25,11 +24,10 @@ public class Enemy : MonoBehaviour
     public float minMoveWaitTime = 1f;
     public float maxMoveWaitTime = 3f;
 
-    // ### 추가된 변수들 ###
     [Header("Avoidance")]
-    public LayerMask enemyLayer; // 감지할 적군 레이어 (Inspector에서 Enemy로 설정)
-    public float avoidanceRadius = 1.0f; // 회피를 시작할 반경
-    public float avoidanceForce = 5.0f; // 서로를 밀어내는 힘의 크기
+    public LayerMask enemyLayer;
+    public float avoidanceRadius = 1.0f;
+    public float avoidanceForce = 5.0f;
 
     [Header("Screen Bounds")]
     public float screenBoundsPadding = 0.5f;
@@ -46,7 +44,6 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        // ... Start() 메서드는 기존과 동일 ...
         enemyCurrentHealth = enemyHealth;
         mainCamera = Camera.main;
         CalculateScreenBounds();
@@ -72,22 +69,11 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // ### Update 로직 수정 ###
-
-            // 1. 기본 이동 방향 계산 (랜덤 목적지)
             Vector3 randomMoveDirection = (moveDestination - transform.position).normalized;
-
-            // 2. 다른 적군을 피하기 위한 회피 방향 계산
             Vector3 avoidanceDirection = CalculateAvoidanceVector();
-
-            // 3. 두 방향을 조합하여 최종 이동 방향 결정
-            // 회피 방향에 가중치(avoidanceForce)를 주어 더 강하게 영향을 받도록 함
             Vector3 finalDirection = (randomMoveDirection + avoidanceDirection * avoidanceForce).normalized;
-
-            // 4. 최종 방향으로 이동
             transform.position += finalDirection * moveSpeed * Time.deltaTime;
 
-            // 5. 플레이어 바라보기 (회전 로직은 동일)
             if (player != null)
             {
                 gizmoTargetPosition = player.position;
@@ -101,39 +87,59 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 주변의 다른 적들을 감지하고, 그들로부터 멀어지는 회피 벡터를 계산합니다.
-    /// </summary>
-    /// <returns>최종 회피 방향 벡터</returns>
+    public void Die()
+    {
+        GameObject effect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
+        Destroy(effect, 2f);
+
+        if (isDropItem && dropItemPrefab != null && dropItemPrefab.Length > 0)
+        {
+            SpawnItem();
+        }
+
+        if (spawnManager != null)
+        {
+            spawnManager.OnEnemyKilled(transform.position);
+        }
+
+        Destroy(gameObject);
+    }
+
+
+    private void SpawnItem()
+    {
+        if (spawnManager != null && !spawnManager.HasItemDroppedThisStage)
+        {
+            if (Random.Range(0, 100) < 10)
+            {
+                Instantiate(dropItemPrefab[0], transform.position, Quaternion.identity);
+
+                spawnManager.NotifyItemDropped();
+            }
+        }
+    }
+
+
     private Vector3 CalculateAvoidanceVector()
     {
         Vector3 avoidanceVector = Vector3.zero;
         int nearbyEnemies = 0;
-
-        // 자신의 avoidanceRadius 반경 안에 있는 모든 'Enemy' 레이어의 콜라이더를 감지
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, avoidanceRadius, enemyLayer);
-
         foreach (var col in colliders)
         {
-            // 감지된 것이 자기 자신이 아닐 경우
             if (col.gameObject != this.gameObject)
             {
-                // 다른 적으로부터 멀어지는 방향을 계산하여 누적
                 avoidanceVector += (transform.position - col.transform.position);
                 nearbyEnemies++;
             }
         }
-
         if (nearbyEnemies > 0)
         {
-            // 평균적인 회피 방향을 계산
             avoidanceVector /= nearbyEnemies;
         }
-
         return avoidanceVector.normalized;
     }
 
-    // ... 나머지 메서드들은 기존과 동일하게 유지됩니다 ...
     private IEnumerator UpdateRandomMovement()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
@@ -185,30 +191,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Die()
-    {
-        GameObject effect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(effect, 2f);
-        if (isDropItem && dropItemPrefab != null)
-        {
-            SpwanItem();
-        }
-        if (spawnManager != null)
-        {
-            spawnManager.OnEnemyKilled();
-        }
-        Destroy(gameObject);
-    }
-
-    private void SpwanItem()
-    {
-        int spawnItem = Random.Range(0, 100);
-        if( spawnItem < 9)
-        {
-            Instantiate(dropItemPrefab[0], transform.position, Quaternion.identity);
-        }
-    }
-
     private IEnumerator AutoFire()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
@@ -218,11 +200,14 @@ public class Enemy : MonoBehaviour
             {
                 Vector3 aimPosition = player.position;
                 Vector3 fireDirection = (aimPosition - bulletSpawnPoint.position).normalized;
-                Quaternion fireRotation = Quaternion.LookRotation(Vector3.forward, -fireDirection);
-                yield return new WaitForSeconds(predictionTime);
-                if (enemyBulletPrefab != null && bulletSpawnPoint != null)
+                if (fireDirection != Vector3.zero)
                 {
-                    Instantiate(enemyBulletPrefab, bulletSpawnPoint.position, fireRotation);
+                    Quaternion fireRotation = Quaternion.LookRotation(Vector3.forward, -fireDirection);
+                    yield return new WaitForSeconds(predictionTime);
+                    if (enemyBulletPrefab != null && bulletSpawnPoint != null)
+                    {
+                        Instantiate(enemyBulletPrefab, bulletSpawnPoint.position, fireRotation);
+                    }
                 }
                 float remainingWaitTime = enemyFireDelay - predictionTime;
                 if (remainingWaitTime > 0)
@@ -237,6 +222,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
     void OnDrawGizmosSelected()
     {
         if (mainCamera == null) return;
@@ -247,11 +233,8 @@ public class Enemy : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(moveDestination, 0.3f);
         Gizmos.DrawLine(transform.position, moveDestination);
-
-        // 회피 반경 시각화 (파란색)
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, avoidanceRadius);
-
         if (player != null)
         {
             Gizmos.color = Color.yellow;
