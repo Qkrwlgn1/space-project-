@@ -5,10 +5,6 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private Rigidbody2D rigid;
-    [SerializeField]
-    private float moveSpeed;
-    [SerializeField]
-    private float minMoveSpeed;
 
     public GameObject explosionEffectPrefab;
     public GameObject bulletPrefab;
@@ -25,9 +21,11 @@ public class PlayerController : MonoBehaviour
 
     private Camera mainCamera;
     private Vector2 screenBounds;
+    private Movement2D movement2D;
 
     void Start()
     {
+        movement2D = GetComponent<Movement2D>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
         playerCurrentHealth = playerHealth;
         StartCoroutine(AutoFireBullet());
@@ -60,22 +58,21 @@ public class PlayerController : MonoBehaviour
         if(y < 0)
         {
             childObejct.transform.localScale = new Vector3(1, 1, 1);
-            if(moveSpeed >= minMoveSpeed)
+            if(movement2D.moveSpeed >= movement2D.minSpeed)
             {
-                --moveSpeed;
+                --movement2D.moveSpeed;
             }
         }
         else if (y > 0)
         {
             childObejct.transform.localScale = new Vector3(2, 2, 1);
-            if(moveSpeed < 7f)
+            if(movement2D.moveSpeed < 7f)
             {
-                ++moveSpeed;
+                ++movement2D.moveSpeed;
             }
         }
 
-        Vector2 moveDirection = new Vector2(x, y).normalized;
-        rigid.linearVelocity = moveDirection * moveSpeed;
+        movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
 

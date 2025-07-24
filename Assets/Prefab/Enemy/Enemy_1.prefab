@@ -222,10 +222,13 @@ MonoBehaviour:
   enemyHealth: 12
   explosionEffectPrefab: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
   enemyBulletPrefab: {fileID: 6798610446988078174, guid: 3412d185171bcd649a794764e65e0d2d, type: 3}
-  dropItemPrefab: {fileID: 820506492106638615, guid: 90542482164ea0047a9b6dbf24286c36, type: 3}
+  dropItemPrefab:
+  - {fileID: 820506492106638615, guid: 90542482164ea0047a9b6dbf24286c36, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
   enemyFireDelay: 0.5
   predictionTime: 1
-  isDropItem: 0
+  isDropItem: 1
   bulletSpawnPoint: {fileID: 5548486362945956381}
   moveSpeed: 2
   rotationSpeed: 50
