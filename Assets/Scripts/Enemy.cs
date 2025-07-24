@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     [Header("Prefabs")]
     public GameObject explosionEffectPrefab;
     public GameObject enemyBulletPrefab;
-    public GameObject dropItemPrefab;
+    public GameObject[] dropItemPrefab;
 
     [Header("Combat")]
     public float enemyFireDelay = 1f;
@@ -191,13 +191,22 @@ public class Enemy : MonoBehaviour
         Destroy(effect, 2f);
         if (isDropItem && dropItemPrefab != null)
         {
-            Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
+            SpwanItem();
         }
         if (spawnManager != null)
         {
             spawnManager.OnEnemyKilled();
         }
         Destroy(gameObject);
+    }
+
+    private void SpwanItem()
+    {
+        int spawnItem = Random.Range(0, 100);
+        if( spawnItem < 9)
+        {
+            Instantiate(dropItemPrefab[0], transform.position, Quaternion.identity);
+        }
     }
 
     private IEnumerator AutoFire()
