@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MoveBackground : MonoBehaviour
 {
-    private Renderer renderer;
+    public new Renderer renderer;
     public float speed = 0.5f;
 
     private void Update()
