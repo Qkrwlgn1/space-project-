@@ -1,14 +1,16 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static bool isGameStarted;
-    
 
+    [Header("Game Objects")]
     public GameObject playerObject;
     public GameObject enemySpawnObject;
     public GameObject startButtonUI;
-    
+    public GameObject hp_Gauge;
+
 
     [Header("Stage Management")]
     public int currentStage = 1;
@@ -27,10 +29,21 @@ public class GameManager : MonoBehaviour
             playerObject.SetActive(false);
         if (enemySpawnObject != null)
             enemySpawnObject.SetActive(false);
+        if (hp_Gauge != null)
+            hp_Gauge.SetActive(false);
 
-        if(backgroundObject != null)
+        if (backgroundObject != null)
         {
             backgroundObject.SetActive(true);
+        }
+    }
+
+    void Update()
+    {
+        if (Input.anyKey)
+        {
+            StartGame();
+            enabled = false;
         }
     }
     
@@ -45,8 +58,11 @@ public class GameManager : MonoBehaviour
                 playerObject.SetActive(true);
             if(enemySpawnObject != null)
                 enemySpawnObject.SetActive(true);
+            if (hp_Gauge != null)
+                hp_Gauge.SetActive(true);
 
-            if(startButtonUI != null)
+
+            if (startButtonUI != null)
                 startButtonUI.SetActive(false);
 
 
@@ -87,11 +103,5 @@ public class GameManager : MonoBehaviour
         LoadStage(currentStage);
     }
 
-    void Update()
-    {
-        if(isGameStarted && Input.GetKeyDown(KeyCode.N))
-        {
-            NextStage();
-        }
-    }
+    
 }
