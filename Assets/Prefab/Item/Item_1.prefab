@@ -148,3 +148,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallSpeed: 5
+  UISellectbar: {fileID: 0}
+  UIStatus: {fileID: 0}

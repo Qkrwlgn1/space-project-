@@ -6,14 +6,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rigid;
 
+    public static bool isPaused = false;
+
     public GameObject explosionEffectPrefab;
     public GameObject bulletPrefab;
+
+    [Header("UI Objects")]
+    [SerializeField] private GameObject itemBack;
+    [SerializeField] private GameObject spawnBars;
 
     public Transform childObject;
     public Transform bulletSpawnPointLv1;
     public Transform[] bulletSpawnPointLv2;
 
     public EnemySpawnManager enemySpawnManager;
+    public UIHPgauge uIHPgauge;
 
     public float bulletFireDelay;
     public float playerHealth;
@@ -90,7 +97,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(float damage)
     {
         playerCurrentHealth -= damage;
-        Debug.Log("Player Health : " + playerCurrentHealth);
+        uIHPgauge.UpdateGauge(playerCurrentHealth);
         if (playerCurrentHealth <= 0)
         {
             Die();
@@ -139,4 +146,29 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(bulletFireDelay);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Item"))
+        {
+
+            StartCoroutine(ItemSellectBars());
+        }
+    }
+
+    IEnumerator ItemSellectBars()
+    {
+        itemBack.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        spawnBars.SetActive(true);
+    }
+
+    public void DeActiveItemSellectBars()
+    {
+        itemBack.SetActive(false);
+        spawnBars.SetActive(false);
+    }
+
 }
