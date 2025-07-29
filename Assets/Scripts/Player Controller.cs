@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using UnityEngine.Pool;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -31,6 +31,12 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private Vector2 screenBounds;
     private Movement2D movement2D;
+    private IObjectPool<BulletController> _Pool;
+
+    void Awake()
+    {
+        _Pool = new ObjectPool<BulletController>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize:10);
+    }
 
     void Start()
     {
@@ -118,7 +124,7 @@ public class PlayerController : MonoBehaviour
     public void LevelUp()
     {
         level++;
-        Debug.Log("플레이어 레벨 1 상승 ! 현재 레벨 : " + level);
+        Debug.Log("Level UP!");
     }
 
     private IEnumerator AutoFireBullet()
@@ -131,7 +137,8 @@ public class PlayerController : MonoBehaviour
                 {
                     if (spawnPoint != null)
                     {
-                        Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
+                        //Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
+                        var bullet = _Pool.Get();
                     }
                 }
             }
@@ -139,7 +146,8 @@ public class PlayerController : MonoBehaviour
             {
                 if (bulletSpawnPointLv1 != null)
                 {
-                    Instantiate(bulletPrefab, bulletSpawnPointLv1.position, Quaternion.identity);
+                    //Instantiate(bulletPrefab, bulletSpawnPointLv1.position, Quaternion.identity);
+                    var bullet = _Pool.Get();
                 }
             }
 
@@ -169,6 +177,29 @@ public class PlayerController : MonoBehaviour
     {
         itemBack.SetActive(false);
         spawnBars.SetActive(false);
+    }
+
+    private BulletController CreateBullet()
+    {
+        BulletController bullet = Instantiate(bulletPrefab, bulletSpawnPointLv1.position, Quaternion.identity).GetComponent<BulletController>();
+        bullet.SetManagePool(_Pool);
+        return bullet;
+    }
+
+    private void OnGetBullet(BulletController bullet)
+    {
+        bullet.gameObject.SetActive(true);
+        
+    }
+
+    private void OnReleaseBullet(BulletController bullet)
+    {
+        bullet.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyBullet(BulletController bullet)
+    {
+        Destroy(bullet.gameObject);
     }
 
 }

@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
                 Destroy(backgroundObject);
             }
 
-            // 스테이지 로드
+            
             int stageloadIndex = 1;
             stageloadIndex = enemySpawn.currentStage;
 
@@ -96,12 +96,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 이 함수는 나중에 스테이지 클리어 시 호출하면 됨
+    
     public void NextStage()
     {
         currentStage++;
         LoadStage(currentStage);
     }
 
-    
 }

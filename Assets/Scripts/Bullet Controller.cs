@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.Pool;
 public class BulletController : MonoBehaviour
 {
     public float bulletSpeed;
     public float playerBulletDamage;
+
+    private IObjectPool<BulletController> _ManagePool;
     void Update()
     {
         transform.Translate(Vector3.up * bulletSpeed * Time.deltaTime);
@@ -10,6 +13,11 @@ public class BulletController : MonoBehaviour
     void OnBecameInvisible()
     {
         Destroy(gameObject);
+    }
+
+    public void SetManagePool(IObjectPool<BulletController> pool)
+    {
+        _ManagePool = pool;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -22,5 +30,9 @@ public class BulletController : MonoBehaviour
             }
             Destroy(gameObject);
         }
+    }
+    public void DestroyBullet()
+    {
+        _ManagePool.Release(this);
     }
 }
