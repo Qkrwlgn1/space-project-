@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    public GameObject enemyPrefab1;
-    public GameObject enemyPrefab2;
-    public GameObject enemyPrefab3;
-    public GameObject bossPrefab;
+    [Header("Pool Tags")]
+    public string enemyTag1 = "Enemy1";
+    public string enemyTag2 = "Enemy2";
+    public string enemyTag3 = "Enemy3";
+    public string bossTag = "Boss";
+    public string guaranteedItemTag = "Item";
 
+    [Header("Spawning Info")]
     public Transform[] enemySpawnPoints;
-
     public float enemySpawnDelay;
     private float currentEnemySpawnDelay;
     public int currentStage = 1;
@@ -26,12 +28,12 @@ public class EnemySpawnManager : MonoBehaviour
 
     [Header("Stage Settings")]
     public float stageClearDelay = 3.0f;
-    public GameObject guaranteedItemPrefab;
 
     private bool hasItemDroppedThisStage = false;
     private bool isStageTransitioning = false;
 
     public bool HasItemDroppedThisStage => hasItemDroppedThisStage;
+
 
     void Start()
     {
@@ -52,6 +54,7 @@ public class EnemySpawnManager : MonoBehaviour
         Debug.Log($"스폰 포인트 개수: {enemySpawnPoints.Length}");
         StartStage(currentStage);
     }
+
 
     void Update()
     {
@@ -76,6 +79,7 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+
     public void OnEnemyKilled(Vector3 deadEnemyPosition)
     {
         aliveEnemies--;
@@ -88,21 +92,17 @@ public class EnemySpawnManager : MonoBehaviour
             if (!hasItemDroppedThisStage)
             {
                 Debug.Log("확정 아이템 드랍! (마지막 적)");
-                if (guaranteedItemPrefab != null)
-                {
-                    Instantiate(guaranteedItemPrefab, deadEnemyPosition, Quaternion.identity);
-                }
+                ObjectPooler.Instance.SpawnFromPool(guaranteedItemTag, deadEnemyPosition, Quaternion.identity);
             }
             StartCoroutine(NextStageRoutine());
         }
     }
 
+
     void StartStage(int stage)
     {
         hasItemDroppedThisStage = false;
-
         isStageTransitioning = false;
-
         enemySpawnedThisStage = 0;
         aliveEnemies = 0;
         enemyToSpawnThisStage = 3 + 4 * stage;
@@ -112,6 +112,7 @@ public class EnemySpawnManager : MonoBehaviour
 
         Debug.Log($"스테이지 {stage} 시작! 스폰할 적의 수: {enemyToSpawnThisStage}");
     }
+
 
     void SpawnBatch()
     {
@@ -129,49 +130,58 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+
     void SpawnRegularEnemy(Transform spawnPoint)
     {
-        List<GameObject> possibleEnemy = new List<GameObject>();
-        if (currentStage >= 1 && currentStage <= 2) { possibleEnemy.Add(enemyPrefab1); }
-        else if (currentStage >= 3 && currentStage <= 5) { possibleEnemy.Add(enemyPrefab1); possibleEnemy.Add(enemyPrefab2); }
-        else { possibleEnemy.Add(enemyPrefab1); possibleEnemy.Add(enemyPrefab2); possibleEnemy.Add(enemyPrefab3); }
-        if (possibleEnemy.Count == 0) return;
-        GameObject prefabToSpawn = possibleEnemy[Random.Range(0, possibleEnemy.Count)];
-        if (prefabToSpawn == null) return;
+        List<string> possibleEnemyTags = new List<string>();
+        if (currentStage >= 1 && currentStage <= 2) { possibleEnemyTags.Add(enemyTag1); }
+        else if (currentStage >= 3 && currentStage <= 5) { possibleEnemyTags.Add(enemyTag1); possibleEnemyTags.Add(enemyTag2); }
+        else { possibleEnemyTags.Add(enemyTag1); possibleEnemyTags.Add(enemyTag2); possibleEnemyTags.Add(enemyTag3); }
+
+        if (possibleEnemyTags.Count == 0) return;
+
+        string tagToSpawn = possibleEnemyTags[Random.Range(0, possibleEnemyTags.Count)];
+
         Vector2 offset = Random.insideUnitCircle * 0.3f;
         Vector3 spawnPosition = spawnPoint.position + new Vector3(offset.x, offset.y, 0);
-        GameObject enemy = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
-        Enemy enemyScript = enemy.GetComponent<Enemy>();
+
+        GameObject enemyObj = ObjectPooler.Instance.SpawnFromPool(tagToSpawn, spawnPosition, Quaternion.identity);
+        if (enemyObj == null) return;
+
+        Enemy enemyScript = enemyObj.GetComponent<Enemy>();
         if (enemyScript != null)
         {
             enemyScript.spawnManager = this;
         }
+
         enemySpawnedThisStage++;
         aliveEnemies++;
         Debug.Log($"일반 적 스폰! 스테이지: {currentStage}, 스폰된 수: {enemySpawnedThisStage}/{enemyToSpawnThisStage}");
     }
 
+
     void SpawnBoss()
     {
-        if (enemySpawnPoints.Length > 4 && bossPrefab != null)
+        if (enemySpawnPoints.Length > 4)
         {
             Vector2 offset = Random.insideUnitCircle * 0.3f;
             Vector3 spawnPos = enemySpawnPoints[4].position + new Vector3(offset.x, offset.y, 0);
-            GameObject boss = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
-            Enemy enemyScript = boss.GetComponent<Enemy>();
+
+            GameObject bossObj = ObjectPooler.Instance.SpawnFromPool(bossTag, spawnPos, Quaternion.identity);
+            if (bossObj == null) return;
+
+            Enemy enemyScript = bossObj.GetComponent<Enemy>();
             if (enemyScript != null)
             {
                 enemyScript.spawnManager = this;
             }
+
             enemySpawnedThisStage++;
             aliveEnemies++;
             Debug.Log($"보스 스폰! 스테이지: {currentStage}");
         }
-        else
-        {
-            Debug.LogError("보스 스폰 실패: 스폰포인트 부족(5개 이상 필요) 또는 보스 프리팹 없음");
-        }
     }
+
 
     void Shuffle<T>(List<T> list)
     {
@@ -184,10 +194,12 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+
     public void NotifyItemDropped()
     {
         hasItemDroppedThisStage = true;
     }
+
 
     private IEnumerator NextStageRoutine()
     {

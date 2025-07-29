@@ -6,21 +6,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rigid;
 
-    public static bool isPaused = false;
-
-    public GameObject explosionEffectPrefab;
-    public GameObject bulletPrefab;
-
-    [Header("UI Objects")]
-    [SerializeField] private GameObject itemBack;
-    [SerializeField] private GameObject spawnBars;
+    public string explosionEffectTag = "PlayerExplosion";
+    public string bulletTag = "PlayerBullet";
 
     public Transform childObject;
     public Transform bulletSpawnPointLv1;
     public Transform[] bulletSpawnPointLv2;
-
     public EnemySpawnManager enemySpawnManager;
-    public UIHPgauge uIHPgauge;
 
     public float bulletFireDelay;
     public float playerHealth;
@@ -31,6 +23,10 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private Vector2 screenBounds;
     private Movement2D movement2D;
+
+    [Header("UI Objects")]
+    [SerializeField] private GameObject itemBack;
+    [SerializeField] private GameObject spawnBars;
 
     void Start()
     {
@@ -60,12 +56,15 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
-
         if (y < 0)
         {
             if (childObject != null)
             {
                 childObject.transform.localScale = new Vector3(1, 1, 1);
+            }
+            if (movement2D.moveSpeed >= movement2D.minSpeed)
+            {
+                movement2D.moveSpeed--;
             }
         }
         else
@@ -75,29 +74,20 @@ public class PlayerController : MonoBehaviour
                 childObject.transform.localScale = new Vector3(2, 2, 1);
             }
         }
-
-        if (y < 0)
-        {
-            if (movement2D.moveSpeed >= movement2D.minSpeed)
-            {
-                movement2D.moveSpeed--;
-            }
-        }
-        else if (y > 0)
+        if (y > 0)
         {
             if (movement2D.moveSpeed < 7f)
             {
                 movement2D.moveSpeed++;
             }
         }
-
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
     public void TakeDamage(float damage)
     {
         playerCurrentHealth -= damage;
-        uIHPgauge.UpdateGauge(playerCurrentHealth);
+        Debug.Log("Player Health : " + playerCurrentHealth);
         if (playerCurrentHealth <= 0)
         {
             Die();
@@ -106,13 +96,15 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        GameObject effect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(effect, 2f);
+        GameObject effect = ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
+        StartCoroutine(DisableAfterTime(effect, 2f));
+
         if (enemySpawnManager != null)
         {
             enemySpawnManager.isPlayerAlive = false;
         }
-        Destroy(gameObject);
+
+        gameObject.SetActive(false);
     }
 
     public void LevelUp()
@@ -131,7 +123,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (spawnPoint != null)
                     {
-                        Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
+                        ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
                     }
                 }
             }
@@ -139,11 +131,20 @@ public class PlayerController : MonoBehaviour
             {
                 if (bulletSpawnPointLv1 != null)
                 {
-                    Instantiate(bulletPrefab, bulletSpawnPointLv1.position, Quaternion.identity);
+                    ObjectPooler.Instance.SpawnFromPool(bulletTag, bulletSpawnPointLv1.position, Quaternion.identity);
                 }
             }
 
             yield return new WaitForSeconds(bulletFireDelay);
+        }
+    }
+
+    private IEnumerator DisableAfterTime(GameObject obj, float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (obj != null)
+        {
+            obj.SetActive(false);
         }
     }
 
@@ -170,5 +171,4 @@ public class PlayerController : MonoBehaviour
         itemBack.SetActive(false);
         spawnBars.SetActive(false);
     }
-
 }
