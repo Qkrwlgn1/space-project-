@@ -1,13 +1,8 @@
 using UnityEngine;
 
-public class StatusManager : MonoBehaviour
+public class Button : MonoBehaviour
 {
-    public Movement2D movement2D;
-    public PlayerController playerController;
-    
-
-
-
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         

@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Enemy
   - Item
+  - Bullet
+  - FxTemporaire
+  - HP++
+  - Speed++
+  - Weapon++
   layers:
   - Default
   - TransparentFX

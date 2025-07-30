@@ -112,8 +112,8 @@ public class Enemy : MonoBehaviour
         {
             if (Random.Range(0, 100) < 10)
             {
-                Instantiate(dropItemPrefab[0], transform.position, Quaternion.identity);
-
+                int i = Random.Range(0, dropItemPrefab.Length - 1);
+                Instantiate(dropItemPrefab[i], transform.position, Quaternion.identity);
                 spawnManager.NotifyItemDropped();
             }
         }

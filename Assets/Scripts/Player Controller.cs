@@ -15,9 +15,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject itemBack;
     [SerializeField] private GameObject spawnBars;
 
+
     public Transform childObject;
     public Transform bulletSpawnPointLv1;
-    public Transform[] bulletSpawnPointLv2;
 
     public EnemySpawnManager enemySpawnManager;
     public UIHPgauge uIHPgauge;
@@ -33,13 +33,16 @@ public class PlayerController : MonoBehaviour
     private Movement2D movement2D;
     private IObjectPool<BulletController> _Pool;
 
+
     void Awake()
     {
-        _Pool = new ObjectPool<BulletController>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize:10);
+        _Pool = new ObjectPool<BulletController>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 10);
+
     }
 
     void Start()
     {
+
         movement2D = GetComponent<Movement2D>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
         playerCurrentHealth = playerHealth;
@@ -69,17 +72,11 @@ public class PlayerController : MonoBehaviour
 
         if (y < 0)
         {
-            if (childObject != null)
-            {
-                childObject.transform.localScale = new Vector3(1, 1, 1);
-            }
+            childObject.transform.localScale = new Vector3(1, 1, 1);
         }
         else
         {
-            if (childObject != null)
-            {
-                childObject.transform.localScale = new Vector3(2, 2, 1);
-            }
+            childObject.transform.localScale = new Vector3(2, 2, 1);
         }
 
         if (y < 0)
@@ -121,35 +118,13 @@ public class PlayerController : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void LevelUp()
-    {
-        level++;
-        Debug.Log("Level UP!");
-    }
+    
 
     private IEnumerator AutoFireBullet()
     {
         while (true)
         {
-            if (level >= 2)
-            {
-                foreach (Transform spawnPoint in bulletSpawnPointLv2)
-                {
-                    if (spawnPoint != null)
-                    {
-                        //Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
-                        var bullet = _Pool.Get();
-                    }
-                }
-            }
-            else
-            {
-                if (bulletSpawnPointLv1 != null)
-                {
-                    //Instantiate(bulletPrefab, bulletSpawnPointLv1.position, Quaternion.identity);
-                    var bullet = _Pool.Get();
-                }
-            }
+            var bullet = _Pool.Get();
 
             yield return new WaitForSeconds(bulletFireDelay);
         }
@@ -159,7 +134,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Item"))
         {
-
             StartCoroutine(ItemSellectBars());
         }
     }
@@ -171,13 +145,9 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         spawnBars.SetActive(true);
+
     }
 
-    public void DeActiveItemSellectBars()
-    {
-        itemBack.SetActive(false);
-        spawnBars.SetActive(false);
-    }
 
     private BulletController CreateBullet()
     {
@@ -189,7 +159,7 @@ public class PlayerController : MonoBehaviour
     private void OnGetBullet(BulletController bullet)
     {
         bullet.gameObject.SetActive(true);
-        
+
     }
 
     private void OnReleaseBullet(BulletController bullet)
@@ -201,5 +171,4 @@ public class PlayerController : MonoBehaviour
     {
         Destroy(bullet.gameObject);
     }
-
 }

@@ -18,10 +18,7 @@ public class Item : MonoBehaviour
         {
             
             PlayerController player = collision.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                player.LevelUp();
-            }
+            Debug.Log("Item collected by player");
 
             Destroy(gameObject);
         }

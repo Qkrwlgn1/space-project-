@@ -140,6 +140,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1134046705}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: bulletFireDelay
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: enemySpawnManager
       value: 
       objectReference: {fileID: 890979126}
@@ -1329,14 +1333,14 @@ PrefabInstance:
     - target: {fileID: 7582184337461719159, guid: d63e11e96520682448d352999902caf8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1559588225}
+      objectReference: {fileID: 11500000, guid: 0a38b9f30e368a44982a6b491dcacdf9, type: 3}
     - target: {fileID: 7582184337461719159, guid: d63e11e96520682448d352999902caf8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7582184337461719159, guid: d63e11e96520682448d352999902caf8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DeActiveItemSellectBars
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7582184337461719159, guid: d63e11e96520682448d352999902caf8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName

@@ -24,18 +24,10 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         isGameStarted = false;
-
-        if (playerObject != null)
-            playerObject.SetActive(false);
-        if (enemySpawnObject != null)
-            enemySpawnObject.SetActive(false);
-        if (hp_Gauge != null)
-            hp_Gauge.SetActive(false);
-
-        if (backgroundObject != null)
-        {
-            backgroundObject.SetActive(true);
-        }
+        playerObject.SetActive(false);
+        enemySpawnObject.SetActive(false);
+        hp_Gauge.SetActive(false);
+        backgroundObject.SetActive(true);
     }
 
     void Update()
@@ -53,23 +45,11 @@ public class GameManager : MonoBehaviour
         if (!isGameStarted)
         {
             isGameStarted = true;
-
-            if(playerObject != null)
-                playerObject.SetActive(true);
-            if(enemySpawnObject != null)
-                enemySpawnObject.SetActive(true);
-            if (hp_Gauge != null)
-                hp_Gauge.SetActive(true);
-
-
-            if (startButtonUI != null)
-                startButtonUI.SetActive(false);
-
-
-            if(backgroundObject != null)
-            {
-                Destroy(backgroundObject);
-            }
+            playerObject.SetActive(true);
+            enemySpawnObject.SetActive(true);
+            hp_Gauge.SetActive(true);
+            startButtonUI.SetActive(false);
+            Destroy(backgroundObject);
 
             
             int stageloadIndex = 1;
@@ -88,11 +68,7 @@ public class GameManager : MonoBehaviour
         if (stageIndex > 0 && stageIndex <= stagePrefabs.Length)
         {
             currentStageObject = Instantiate(stagePrefabs[stageIndex - 1]);
-            currentStageObject.transform.position = new Vector3(-2.8f, -0.5f, 0); // Reset position
-        }
-        else
-        {
-            Debug.LogWarning("Stage index out of bounds or prefab is null.");
+            currentStageObject.transform.position = new Vector3(-2.8f, -0.5f, 0);
         }
     }
 
