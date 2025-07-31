@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyBulletController : MonoBehaviour
 {
     public float enemyBulletSpeed;
-    public float enemyBulletDamage;
+    public int enemyBulletDamage;
 
 
     void Update()

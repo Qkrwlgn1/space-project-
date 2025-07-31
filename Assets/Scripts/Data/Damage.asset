@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8848f1f4607770442b75918fd91a60e4, type: 3}
-  m_Name: Weapon
+  m_Name: Damage
   m_EditorClassIdentifier: 
-  statusType: 3
-  statusId: 3
-  statusName: Count_UP
-  statusDesc: Weapon Number +1
-  statusIcon: {fileID: 362099136, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+  statusType: 1
+  statusId: 1
+  statusName: Damage_UP
+  statusDesc: 
+  statusIcon: {fileID: 808527345, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
   HP: 0
-  Damage: 0
+  Damage: 5
   Speed: 0
-  WeaponNumber: 1
+  WeaponNumber: 0
   HP_Steps: 
-  Damage_Steps: 
+  Damage_Steps: 0200000001000000030000000200000002000000
   Speed_Steps: []
-  WeaponNumber_Steps: 0100000001000000010000000100000001000000
+  WeaponNumber_Steps: 
   statusTile: {fileID: 0}

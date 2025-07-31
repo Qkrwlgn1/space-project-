@@ -9,19 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81e5ed605a58cab43bd2c2a499f02c5d, type: 3}
+  m_Script: {fileID: 11500000, guid: 8848f1f4607770442b75918fd91a60e4, type: 3}
   m_Name: HP
   m_EditorClassIdentifier: 
   statusType: 0
   statusId: 0
-  statusDesc: MaxHealth UP& Full Health
-  statusName: 
-  statusIcon: {fileID: 623849741, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+  statusName: HP_UP
+  statusDesc: HP_UP
+  statusIcon: {fileID: 381300419, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
   HP: 10
-  Shield: 0
-  Barrier: 0
-  HP_Steps: 0f000000140000001e0000002800000032000000
-  Shield_Steps: []
-  Barrier_Steps: []
-  Count: 
+  Damage: 0
+  Speed: 0
+  WeaponNumber: 0
+  HP_Steps: 0a0000000b0000000b0000000c0000000c000000
+  Damage_Steps: 
+  Speed_Steps: []
+  WeaponNumber_Steps: 
   statusTile: {fileID: 0}

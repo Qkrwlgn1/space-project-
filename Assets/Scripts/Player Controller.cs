@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("UI Objects")]
     [SerializeField] private GameObject itemBack;
-    [SerializeField] private GameObject spawnBars;
+    [SerializeField] private GameObject statusBars;
 
 
     public Transform childObject;
@@ -23,14 +23,13 @@ public class PlayerController : MonoBehaviour
     public UIHPgauge uIHPgauge;
 
     public float bulletFireDelay;
-    public float playerHealth;
-    private float playerCurrentHealth;
-    public float level = 1;
+    public int playerHealth;
+    public int playerCurrentHealth;
     public float screenPadding;
 
     private Camera mainCamera;
     private Vector2 screenBounds;
-    private Movement2D movement2D;
+    public Movement2D movement2D;
     private IObjectPool<BulletController> _Pool;
 
 
@@ -97,7 +96,7 @@ public class PlayerController : MonoBehaviour
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
         playerCurrentHealth -= damage;
         uIHPgauge.UpdateGauge(playerCurrentHealth);
@@ -117,8 +116,6 @@ public class PlayerController : MonoBehaviour
         }
         Destroy(gameObject);
     }
-
-    
 
     private IEnumerator AutoFireBullet()
     {
@@ -144,7 +141,7 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        spawnBars.SetActive(true);
+        statusBars.SetActive(true);
 
     }
 

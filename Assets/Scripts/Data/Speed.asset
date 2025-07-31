@@ -12,20 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8848f1f4607770442b75918fd91a60e4, type: 3}
   m_Name: Speed
   m_EditorClassIdentifier: 
-  statusType: 1
-  statusId: 1
-  statusDesc: Weapon Speed Up
-  statusName: Speed
+  statusType: 2
+  statusId: 2
+  statusName: Speed_UP
+  statusDesc: Delay Down
   statusIcon: {fileID: -640786540, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+  HP: 0
   Damage: 0
   Speed: 0.2
   WeaponNumber: 0
-  Damage_Steps: []
+  HP_Steps: 
+  Damage_Steps: 
   Speed_Steps:
-  - 0.17
-  - 0.16
-  - 0.14
-  - 0.12
-  - 0.1
+  - -0.01
+  - -0.01
+  - -0.02
+  - -0.02
+  - -0.03
   WeaponNumber_Steps: 
   statusTile: {fileID: 0}

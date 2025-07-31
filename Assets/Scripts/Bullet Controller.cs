@@ -3,7 +3,7 @@ using UnityEngine.Pool;
 public class BulletController : MonoBehaviour
 {
     public float bulletSpeed;
-    public float playerBulletDamage;
+    public int playerBulletDamage;
 
     private IObjectPool<BulletController> _ManagePool;
     void Update()
