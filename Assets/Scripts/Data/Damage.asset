@@ -13,16 +13,15 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: 
   statusType: 1
-  statusId: 1
+  statusId: 2
   statusName: Damage_UP
-  statusDesc: 
+  statusDesc: Damage +{0} UP
   statusIcon: {fileID: 808527345, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
   HP: 0
   Damage: 5
   Speed: 0
   WeaponNumber: 0
-  HP_Steps: 
-  Damage_Steps: 0200000001000000030000000200000002000000
-  Speed_Steps: []
-  WeaponNumber_Steps: 
+  BulletSize: 0
+  Status_INT: 0200000003000000040000000500000006000000
+  Status_FLOAT: []
   statusTile: {fileID: 0}

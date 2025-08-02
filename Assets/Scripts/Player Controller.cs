@@ -24,24 +24,18 @@ public class PlayerController : MonoBehaviour
 
     public float bulletFireDelay;
     public int playerHealth;
+    public int playerBulletDamage;
     public int playerCurrentHealth;
     public float screenPadding;
 
     private Camera mainCamera;
     private Vector2 screenBounds;
-    public Movement2D movement2D;
-    private IObjectPool<BulletController> _Pool;
+    private Movement2D movement2D;
 
 
-    void Awake()
-    {
-        _Pool = new ObjectPool<BulletController>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 10);
-
-    }
 
     void Start()
     {
-
         movement2D = GetComponent<Movement2D>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
         playerCurrentHealth = playerHealth;
@@ -53,6 +47,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         Move();
     }
 
@@ -121,7 +117,8 @@ public class PlayerController : MonoBehaviour
     {
         while (true)
         {
-            var bullet = _Pool.Get();
+            var bullet = ObjectPoolManager.instance.Pool.Get();
+            bullet.transform.position = bulletSpawnPointLv1.position;
 
             yield return new WaitForSeconds(bulletFireDelay);
         }
@@ -143,29 +140,7 @@ public class PlayerController : MonoBehaviour
 
         statusBars.SetActive(true);
 
+        GameManager.instance.Stop();
     }
-
-
-    private BulletController CreateBullet()
-    {
-        BulletController bullet = Instantiate(bulletPrefab, bulletSpawnPointLv1.position, Quaternion.identity).GetComponent<BulletController>();
-        bullet.SetManagePool(_Pool);
-        return bullet;
-    }
-
-    private void OnGetBullet(BulletController bullet)
-    {
-        bullet.gameObject.SetActive(true);
-
-    }
-
-    private void OnReleaseBullet(BulletController bullet)
-    {
-        bullet.gameObject.SetActive(false);
-    }
-
-    private void OnDestroyBullet(BulletController bullet)
-    {
-        Destroy(bullet.gameObject);
-    }
+    
 }

@@ -1,24 +1,20 @@
 using UnityEngine;
 using UnityEngine.Pool;
+using System.Collections;
 public class BulletController : MonoBehaviour
 {
+    public IObjectPool<GameObject> Pool { get; set; }
     public float bulletSpeed;
-    public int playerBulletDamage;
+    public PlayerController playerCon;
 
-    private IObjectPool<BulletController> _ManagePool;
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+            
         transform.Translate(Vector3.up * bulletSpeed * Time.deltaTime);
     }
-    void OnBecameInvisible()
-    {
-        Destroy(gameObject);
-    }
 
-    public void SetManagePool(IObjectPool<BulletController> pool)
-    {
-        _ManagePool = pool;
-    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
@@ -26,13 +22,15 @@ public class BulletController : MonoBehaviour
             Enemy enemy = collision.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(playerBulletDamage);
+                enemy.TakeDamage(playerCon.playerBulletDamage);
             }
-            Destroy(gameObject);
+            Pool.Release(this.gameObject);
         }
     }
-    public void DestroyBullet()
+
+    private void OnBecameInvisible()
     {
-        _ManagePool.Release(this);
+        Pool.Release(this.gameObject);
     }
+
 }

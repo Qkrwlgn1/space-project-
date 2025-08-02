@@ -15,14 +15,13 @@ MonoBehaviour:
   statusType: 0
   statusId: 0
   statusName: HP_UP
-  statusDesc: HP_UP
+  statusDesc: HP +{0} UP!!
   statusIcon: {fileID: 381300419, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
   HP: 10
   Damage: 0
   Speed: 0
   WeaponNumber: 0
-  HP_Steps: 0a0000000b0000000b0000000c0000000c000000
-  Damage_Steps: 
-  Speed_Steps: []
-  WeaponNumber_Steps: 
+  BulletSize: 0
+  Status_INT: 0a0000000f000000140000001900000022000000
+  Status_FLOAT: []
   statusTile: {fileID: 0}

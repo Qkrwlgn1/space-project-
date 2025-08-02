@@ -4,8 +4,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [Header("Enemy Stats")]
-    public float enemyHealth;
-    private float enemyCurrentHealth;
+    public int enemyHealth;
+    private int enemyCurrentHealth;
 
     [Header("Prefabs")]
     public GameObject explosionEffectPrefab;
@@ -60,6 +60,9 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         if (!hasEnteredScreen)
         {
             if (moveDestination == Vector3.zero)
@@ -181,7 +184,7 @@ public class Enemy : MonoBehaviour
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, distance));
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
         enemyCurrentHealth -= damage;
         Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);

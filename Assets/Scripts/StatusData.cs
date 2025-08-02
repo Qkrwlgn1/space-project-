@@ -1,9 +1,10 @@
 using UnityEngine;
+using System.Collections;
 
 [CreateAssetMenu(fileName = "Status", menuName = "Scriptable Object/StatusData")]
 public class StatusData : ScriptableObject
 {
-    public enum StatusType { HP, Damage, Speed, WeaponNumber }
+    public enum StatusType { HP, Damage, Speed, WeaponNumber, BulletSize}
 
     [Header("# Status Type")]
 
@@ -20,11 +21,10 @@ public class StatusData : ScriptableObject
     public int Damage;
     public float Speed;
     public int WeaponNumber;
+    public float BulletSize;
 
-    public int[] HP_Steps;
-    public int[] Damage_Steps;
-    public float[] Speed_Steps;
-    public int[] WeaponNumber_Steps;
+    public int[] Status_INT;
+    public float[] Status_FLOAT;
 
     [Header("# Status")]
     public GameObject statusTile;

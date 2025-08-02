@@ -8,9 +8,7 @@ TagManager:
   - Item
   - Bullet
   - FxTemporaire
-  - HP++
-  - Speed++
-  - Weapon++
+  - GameManager
   layers:
   - Default
   - TransparentFX

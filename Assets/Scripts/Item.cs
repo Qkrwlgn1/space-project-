@@ -9,6 +9,8 @@ public class Item : MonoBehaviour
     
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         transform.Translate(Vector3.down * fallSpeed * Time.deltaTime); 
     }
 

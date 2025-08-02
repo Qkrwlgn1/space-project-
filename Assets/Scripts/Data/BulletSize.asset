@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8848f1f4607770442b75918fd91a60e4, type: 3}
-  m_Name: Speed
+  m_Name: BulletSize
   m_EditorClassIdentifier: 
-  statusType: 2
-  statusId: 1
-  statusName: Speed_UP
-  statusDesc: Delay {0}% Down
-  statusIcon: {fileID: -640786540, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+  statusType: 4
+  statusId: 4
+  statusName: Bullet Size
+  statusDesc: Bullet Size {0}% UP
+  statusIcon: {fileID: 1870898176, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
   HP: 0
   Damage: 0
-  Speed: 0.2
+  Speed: 0
   WeaponNumber: 0
-  BulletSize: 0
+  BulletSize: 1.8
   Status_INT: 
   Status_FLOAT:
-  - 10
-  - 10
-  - 20
-  - 20
-  - 30
+  - 0.1
+  - 0.2
+  - 0.2
+  - 0.3
+  - 0.3
   statusTile: {fileID: 0}

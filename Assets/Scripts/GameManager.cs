@@ -3,7 +3,9 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool isGameStarted;
+    public static GameManager instance;
+    public bool isGameStarted;
+    public bool isLive;
 
     [Header("Game Objects")]
     public GameObject playerObject;
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
         isGameStarted = false;
         playerObject.SetActive(false);
         enemySpawnObject.SetActive(false);
@@ -38,7 +41,7 @@ public class GameManager : MonoBehaviour
             enabled = false;
         }
     }
-    
+
 
     public void StartGame()
     {
@@ -51,7 +54,7 @@ public class GameManager : MonoBehaviour
             startButtonUI.SetActive(false);
             Destroy(backgroundObject);
 
-            
+
             int stageloadIndex = 1;
             stageloadIndex = enemySpawn.currentStage;
 
@@ -72,11 +75,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+
     public void NextStage()
     {
         currentStage++;
         LoadStage(currentStage);
+    }
+
+    public void Stop()
+    {
+        isLive = false;
+        Time.timeScale = 0;
+    }
+
+    public void Resume()
+    {
+        isLive = true;
+        Time.timeScale = 1;
     }
 
 }

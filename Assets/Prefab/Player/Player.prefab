@@ -30,8 +30,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3225669756380689103}
-  - {fileID: 5016712708789924988}
-  - {fileID: 8564432473342434262}
   m_Father: {fileID: 3746220097298854423}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1280346478790367782
@@ -370,15 +368,16 @@ MonoBehaviour:
   rigid: {fileID: 6272145993284007001}
   explosionEffectPrefab: {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
   bulletPrefab: {fileID: 1860706049015914, guid: 0b0c27137eb4d504096874b80ace66bd, type: 3}
+  itemBack: {fileID: 0}
+  statusBars: {fileID: 0}
   childObject: {fileID: 8826987413122290447}
   bulletSpawnPointLv1: {fileID: 3225669756380689103}
-  bulletSpawnPointLv2:
-  - {fileID: 5016712708789924988}
-  - {fileID: 8564432473342434262}
   enemySpawnManager: {fileID: 0}
-  bulletFireDelay: 0.15
+  uIHPgauge: {fileID: 0}
+  bulletFireDelay: 0.2
   playerHealth: 10
-  level: 1
+  playerBulletDamage: 5
+  playerCurrentHealth: 0
   screenPadding: 0.7
 --- !u!114 &2391615241173966709
 MonoBehaviour:
@@ -395,68 +394,6 @@ MonoBehaviour:
   moveSpeed: 7
   minSpeed: 6
   moveDirection: {x: 0, y: 0, z: 0}
---- !u!1 &4564948706481381307
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8564432473342434262}
-  m_Layer: 0
-  m_Name: BulletSpawnPoint Level 2-2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8564432473342434262
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4564948706481381307}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.415, y: -0.4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6159873404450274890}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4848986612088864601
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5016712708789924988}
-  m_Layer: 0
-  m_Name: BulletSpawnPoint Level 2-1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5016712708789924988
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4848986612088864601}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.415, y: -0.4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6159873404450274890}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8124933257987279481
 GameObject:
   m_ObjectHideFlags: 0

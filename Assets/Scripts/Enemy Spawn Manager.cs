@@ -35,6 +35,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     void Start()
     {
+
         if (enemySpawnPoints == null || enemySpawnPoints.Length == 0)
         {
             int childCount = transform.childCount;
@@ -46,15 +47,18 @@ public class EnemySpawnManager : MonoBehaviour
         }
         if (enemySpawnPoints.Length == 0)
         {
-            Debug.LogError("EnemySpawnManager: ½ºÆù Æ÷ÀÎÆ®°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+            Debug.LogError("EnemySpawnManager: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
-        Debug.Log($"½ºÆù Æ÷ÀÎÆ® °³¼ö: {enemySpawnPoints.Length}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½: {enemySpawnPoints.Length}");
         StartStage(currentStage);
     }
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         if (!isPlayerAlive || currentStage > maxStage || enemySpawnedThisStage >= enemyToSpawnThisStage || isStageTransitioning)
             return;
 
@@ -79,7 +83,7 @@ public class EnemySpawnManager : MonoBehaviour
     public void OnEnemyKilled(Vector3 deadEnemyPosition)
     {
         aliveEnemies--;
-        Debug.Log($"Àû Ã³Ä¡! ³²Àº Àû: {aliveEnemies}");
+        Debug.Log($"ï¿½ï¿½ Ã³Ä¡! ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {aliveEnemies}");
 
         if (!isStageTransitioning && enemySpawnedThisStage >= enemyToSpawnThisStage && aliveEnemies <= 0)
         {
@@ -87,7 +91,7 @@ public class EnemySpawnManager : MonoBehaviour
 
             if (!hasItemDroppedThisStage)
             {
-                Debug.Log("È®Á¤ ¾ÆÀÌÅÛ µå¶ø! (¸¶Áö¸· Àû)");
+                Debug.Log("È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½! (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)");
                 if (guaranteedItemPrefab != null)
                 {
                     Instantiate(guaranteedItemPrefab, deadEnemyPosition, Quaternion.identity);
@@ -110,7 +114,7 @@ public class EnemySpawnManager : MonoBehaviour
         if (spawnBoss)
             enemyToSpawnThisStage += 1;
 
-        Debug.Log($"½ºÅ×ÀÌÁö {stage} ½ÃÀÛ! ½ºÆùÇÒ ÀûÀÇ ¼ö: {enemyToSpawnThisStage}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {stage} ï¿½ï¿½ï¿½ï¿½! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {enemyToSpawnThisStage}");
     }
 
     void SpawnBatch()
@@ -148,7 +152,7 @@ public class EnemySpawnManager : MonoBehaviour
         }
         enemySpawnedThisStage++;
         aliveEnemies++;
-        Debug.Log($"ÀÏ¹Ý Àû ½ºÆù! ½ºÅ×ÀÌÁö: {currentStage}, ½ºÆùµÈ ¼ö: {enemySpawnedThisStage}/{enemyToSpawnThisStage}");
+        Debug.Log($"ï¿½Ï¹ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {currentStage}, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {enemySpawnedThisStage}/{enemyToSpawnThisStage}");
     }
 
     void SpawnBoss()
@@ -165,11 +169,11 @@ public class EnemySpawnManager : MonoBehaviour
             }
             enemySpawnedThisStage++;
             aliveEnemies++;
-            Debug.Log($"º¸½º ½ºÆù! ½ºÅ×ÀÌÁö: {currentStage}");
+            Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {currentStage}");
         }
         else
         {
-            Debug.LogError("º¸½º ½ºÆù ½ÇÆÐ: ½ºÆùÆ÷ÀÎÆ® ºÎÁ·(5°³ ÀÌ»ó ÇÊ¿ä) ¶Ç´Â º¸½º ÇÁ¸®ÆÕ ¾øÀ½");
+            Debug.LogError("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½(5ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½Ê¿ï¿½) ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         }
     }
 
@@ -191,7 +195,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     private IEnumerator NextStageRoutine()
     {
-        Debug.Log($"½ºÅ×ÀÌÁö {currentStage} Å¬¸®¾î!");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ {currentStage} Å¬ï¿½ï¿½ï¿½ï¿½!");
         yield return new WaitForSeconds(stageClearDelay);
         currentStage++;
         if (currentStage <= maxStage)
@@ -200,7 +204,7 @@ public class EnemySpawnManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("¸ðµç ½ºÅ×ÀÌÁö ¿Ï·á! Å¬¸®¾î!");
+            Debug.Log("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½! Å¬ï¿½ï¿½ï¿½ï¿½!");
         }
     }
 }

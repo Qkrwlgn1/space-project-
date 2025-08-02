@@ -8,6 +8,8 @@ public class EnemyBulletController : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         transform.position += -transform.up * enemyBulletSpeed * Time.deltaTime;
     }
 

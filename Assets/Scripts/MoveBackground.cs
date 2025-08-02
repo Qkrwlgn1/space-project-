@@ -8,6 +8,9 @@ public class MoveBackground : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+            
         float move = Time.deltaTime * speed;
         renderer.material.mainTextureOffset += Vector2.up * move;
     }
