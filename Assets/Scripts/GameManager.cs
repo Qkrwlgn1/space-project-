@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class GameManager : MonoBehaviour
 
     [Header("Enternal Scripts")]
     public EnemySpawnManager enemySpawn;
+
+    public PlayerController playerCon;
+    [SerializeField] private GameObject itemBack;
+    [SerializeField] private GameObject statusBars;
 
     void Awake()
     {
@@ -75,7 +80,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     public void NextStage()
     {
         currentStage++;
@@ -94,4 +98,24 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    public IEnumerator ItemSellectBars()
+    {
+
+        itemBack.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        playerCon.Next();
+        statusBars.SetActive(true);
+
+        Stop();
+    }
+
+    public IEnumerator StatusSellectBarsBack()
+    {
+        itemBack.SetActive(false);
+        statusBars.SetActive(false);
+        Resume();
+        yield return new WaitForSeconds(0f);
+    }
 }

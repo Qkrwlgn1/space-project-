@@ -23,8 +23,8 @@ public class StatusData : ScriptableObject
     public int WeaponNumber;
     public float BulletSize;
 
-    public int[] Status_INT;
-    public float[] Status_FLOAT;
+    public int[] Status_Int;
+    public float[] Status_Flot;
 
     [Header("# Status")]
     public GameObject statusTile;

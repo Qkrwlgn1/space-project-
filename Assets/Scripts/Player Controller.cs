@@ -12,8 +12,7 @@ public class PlayerController : MonoBehaviour
     public GameObject bulletPrefab;
 
     [Header("UI Objects")]
-    [SerializeField] private GameObject itemBack;
-    [SerializeField] private GameObject statusBars;
+    public Status[] sta;
 
 
     public Transform childObject;
@@ -34,10 +33,14 @@ public class PlayerController : MonoBehaviour
 
 
 
-    void Start()
+    void Awake()
     {
         movement2D = GetComponent<Movement2D>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
+
+    }
+    void Start()
+    {
         playerCurrentHealth = playerHealth;
         StartCoroutine(AutoFireBullet());
 
@@ -128,19 +131,46 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Item"))
         {
-            StartCoroutine(ItemSellectBars());
+            StartCoroutine(GameManager.instance.ItemSellectBars());
         }
     }
 
-    IEnumerator ItemSellectBars()
+    
+    public void Next()
     {
-        itemBack.SetActive(true);
+        foreach (Status status in sta)
+        {
+            status.gameObject.SetActive(false);
+        }
 
-        yield return new WaitForSeconds(1f);
+        int[] ran = new int[3];
 
-        statusBars.SetActive(true);
+        while (true)
+        {
+            ran[0] = Random.Range(0, sta.Length);
+            ran[1] = Random.Range(0, sta.Length);
+            ran[2] = Random.Range(0, sta.Length);
 
-        GameManager.instance.Stop();
+            if (ran[0] != ran[1] && ran[1] != ran[2] && ran[0] != ran[2])
+            {
+                Debug.Log("Date existing");
+                break;
+            }
+        }
+        
+        for (int i = 0; i < ran.Length; i++)
+        {
+            Status ranSta = sta[ran[i]];
+
+            if (ranSta.level == 5)
+            {
+                ranSta.gameObject.SetActive(false);
+            }
+            else
+            {
+                ranSta.gameObject.SetActive(true);
+            }
+        }
     }
     
 }

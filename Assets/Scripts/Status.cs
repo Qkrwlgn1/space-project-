@@ -8,9 +8,6 @@ public class Status : MonoBehaviour
     public int level;
     public PlayerController playerCon;
 
-    [SerializeField] private GameObject itemBack;
-    [SerializeField] private GameObject statusBars;
-
     Image icon;
     TextMeshProUGUI textLevel;
     TextMeshProUGUI textDesc;
@@ -34,11 +31,11 @@ public class Status : MonoBehaviour
             case StatusData.StatusType.HP:
             case StatusData.StatusType.Damage:
             case StatusData.StatusType.WeaponNumber:
-                textDesc.text = string.Format(data.statusDesc, data.Status_INT[level]);
+                textDesc.text = string.Format(data.statusDesc, data.Status_Int[level]);
                 break;
             case StatusData.StatusType.BulletSize:
             case StatusData.StatusType.Speed:
-                textDesc.text = string.Format(data.statusDesc, data.Status_FLOAT[level]);
+                textDesc.text = string.Format(data.statusDesc, data.Status_Flot[level]);
                 break;
         }
         
@@ -52,7 +49,7 @@ public class Status : MonoBehaviour
             case StatusData.StatusType.Damage:
                 break;
             case StatusData.StatusType.Speed:
-            playerCon.bulletFireDelay -= (playerCon.bulletFireDelay * (data.Status_FLOAT[level] * 0.01f));
+            playerCon.bulletFireDelay -= (playerCon.bulletFireDelay * (data.Status_Flot[level] * 0.01f));
                 break;
             case StatusData.StatusType.WeaponNumber:
                 break;
@@ -61,7 +58,7 @@ public class Status : MonoBehaviour
         }
 
         level++;
-        StartCoroutine(ItemSellectBarsBack());
+        StartCoroutine(GameManager.instance.StatusSellectBarsBack());
 
 
         if (level == 5)
@@ -71,14 +68,5 @@ public class Status : MonoBehaviour
 
     }
 
-    IEnumerator ItemSellectBarsBack()
-    {
-        itemBack.SetActive(false);
-
-        yield return new WaitForSeconds(0.5f);
-
-        statusBars.SetActive(false);
-
-        GameManager.instance.Resume();
-    }
+    
 }

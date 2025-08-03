@@ -140,9 +140,33 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2120816568}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: sta.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: enemySpawnManager
       value: 
       objectReference: {fileID: 890979126}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: 'sta.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6755243265365136015}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: 'sta.Array.data[1]'
+      value: 
+      objectReference: {fileID: 721508886}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: 'sta.Array.data[2]'
+      value: 
+      objectReference: {fileID: 416603542}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: 'sta.Array.data[3]'
+      value: 
+      objectReference: {fileID: 809743013}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: 'sta.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1508646804}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: playerBulletDamage
       value: 5
@@ -881,8 +905,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 57c2c72be3df3b74aa9c5e09765d1839, type: 2}
   level: 0
   playerCon: {fileID: 1559588225}
-  itemBack: {fileID: 3142216084785179851}
-  statusBars: {fileID: 2120816568}
 --- !u!114 &416603543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1519,6 +1541,9 @@ MonoBehaviour:
   - {fileID: 737466568278305744, guid: 7a568e7b73fa314438eef4615582543f, type: 3}
   - {fileID: 737466568278305744, guid: 7a568e7b73fa314438eef4615582543f, type: 3}
   enemySpawn: {fileID: 890979126}
+  playerCon: {fileID: 1559588225}
+  itemBack: {fileID: 3142216084785179851}
+  statusBars: {fileID: 2120816568}
 --- !u!4 &626514755
 Transform:
   m_ObjectHideFlags: 0
@@ -1622,8 +1647,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 142dad5450f3c9641a773fdc668d667a, type: 2}
   level: 0
   playerCon: {fileID: 1559588225}
-  itemBack: {fileID: 3142216084785179851}
-  statusBars: {fileID: 2120816568}
 --- !u!114 &721508887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1911,8 +1934,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 50ac79e9c1309254bb55db340fd34fe6, type: 2}
   level: 0
   playerCon: {fileID: 1559588225}
-  itemBack: {fileID: 3142216084785179851}
-  statusBars: {fileID: 2120816568}
 --- !u!114 &809743014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2805,8 +2826,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: e9317910d6b83b84e8590de3ebb9d778, type: 2}
   level: 0
   playerCon: {fileID: 1559588225}
-  itemBack: {fileID: 3142216084785179851}
-  statusBars: {fileID: 2120816568}
 --- !u!114 &1508646805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4482,8 +4501,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 1f097a89978e132468f3fd7cea3e94ca, type: 2}
   level: 0
   playerCon: {fileID: 1559588225}
-  itemBack: {fileID: 3142216084785179851}
-  statusBars: {fileID: 2120816568}
 --- !u!222 &6927951010218001991
 CanvasRenderer:
   m_ObjectHideFlags: 0

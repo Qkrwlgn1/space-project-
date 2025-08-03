@@ -22,11 +22,11 @@ MonoBehaviour:
   Speed: 0
   WeaponNumber: 0
   BulletSize: 1.8
-  Status_INT: 
-  Status_FLOAT:
-  - 0.1
-  - 0.2
-  - 0.2
-  - 0.3
-  - 0.3
+  Status_Int: 
+  Status_Flot:
+  - 10
+  - 10
+  - 20
+  - 20
+  - 30
   statusTile: {fileID: 0}

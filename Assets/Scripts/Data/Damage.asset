@@ -22,6 +22,6 @@ MonoBehaviour:
   Speed: 0
   WeaponNumber: 0
   BulletSize: 0
-  Status_INT: 0200000003000000040000000500000006000000
-  Status_FLOAT: []
+  Status_Int: 0100000001000000020000000200000003000000
+  Status_Flot: []
   statusTile: {fileID: 0}

@@ -22,8 +22,8 @@ MonoBehaviour:
   Speed: 0.2
   WeaponNumber: 0
   BulletSize: 0
-  Status_INT: 
-  Status_FLOAT:
+  Status_Int: 
+  Status_Flot:
   - 10
   - 10
   - 20

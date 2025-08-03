@@ -15,13 +15,13 @@ MonoBehaviour:
   statusType: 3
   statusId: 3
   statusName: Count_UP
-  statusDesc: Weapon Number +{1}
+  statusDesc: Weapon Number +{0}
   statusIcon: {fileID: 362099136, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
   HP: 0
   Damage: 0
   Speed: 0
   WeaponNumber: 1
   BulletSize: 0
-  Status_INT: 0100000001000000010000000100000001000000
-  Status_FLOAT: []
+  Status_Int: 0100000001000000010000000100000001000000
+  Status_Flot: []
   statusTile: {fileID: 0}
