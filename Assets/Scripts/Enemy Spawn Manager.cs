@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    public GameObject enemyPrefab1;
-    public GameObject enemyPrefab2;
-    public GameObject enemyPrefab3;
-    public GameObject bossPrefab;
+    [Header("Pool Tags")]
+    public string enemyTag1 = "Enemy1";
+    public string enemyTag2 = "Enemy2";
+    public string enemyTag3 = "Enemy3";
+    public string bossTag = "Boss";
+    public string guaranteedItemTag = "Item";
 
+    [Header("Spawning Info")]
     public Transform[] enemySpawnPoints;
-
     public float enemySpawnDelay;
     private float currentEnemySpawnDelay;
     public int currentStage = 1;
@@ -26,12 +28,12 @@ public class EnemySpawnManager : MonoBehaviour
 
     [Header("Stage Settings")]
     public float stageClearDelay = 3.0f;
-    public GameObject guaranteedItemPrefab;
 
     private bool hasItemDroppedThisStage = false;
     private bool isStageTransitioning = false;
 
     public bool HasItemDroppedThisStage => hasItemDroppedThisStage;
+
 
     void Start()
     {
@@ -45,14 +47,10 @@ public class EnemySpawnManager : MonoBehaviour
                 enemySpawnPoints[i] = transform.GetChild(i);
             }
         }
-        if (enemySpawnPoints.Length == 0)
-        {
-            Debug.LogError("EnemySpawnManager: ���� ����Ʈ�� �������� �ʾҽ��ϴ�!");
-            return;
-        }
-        Debug.Log($"���� ����Ʈ ����: {enemySpawnPoints.Length}");
+        
         StartStage(currentStage);
     }
+
 
     void Update()
     {
@@ -80,10 +78,10 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+
     public void OnEnemyKilled(Vector3 deadEnemyPosition)
     {
         aliveEnemies--;
-        Debug.Log($"�� óġ! ���� ��: {aliveEnemies}");
 
         if (!isStageTransitioning && enemySpawnedThisStage >= enemyToSpawnThisStage && aliveEnemies <= 0)
         {
@@ -91,31 +89,25 @@ public class EnemySpawnManager : MonoBehaviour
 
             if (!hasItemDroppedThisStage)
             {
-                Debug.Log("Ȯ�� ������ ���! (������ ��)");
-                if (guaranteedItemPrefab != null)
-                {
-                    Instantiate(guaranteedItemPrefab, deadEnemyPosition, Quaternion.identity);
-                }
+                ObjectPooler.Instance.SpawnFromPool(guaranteedItemTag, deadEnemyPosition, Quaternion.identity);
             }
             StartCoroutine(NextStageRoutine());
         }
     }
 
+
     void StartStage(int stage)
     {
         hasItemDroppedThisStage = false;
-
         isStageTransitioning = false;
-
         enemySpawnedThisStage = 0;
         aliveEnemies = 0;
         enemyToSpawnThisStage = 3 + 4 * stage;
         bool spawnBoss = (stage % 5 == 0);
         if (spawnBoss)
             enemyToSpawnThisStage += 1;
-
-        Debug.Log($"�������� {stage} ����! ������ ���� ��: {enemyToSpawnThisStage}");
     }
+
 
     void SpawnBatch()
     {
@@ -133,49 +125,56 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+
     void SpawnRegularEnemy(Transform spawnPoint)
     {
-        List<GameObject> possibleEnemy = new List<GameObject>();
-        if (currentStage >= 1 && currentStage <= 2) { possibleEnemy.Add(enemyPrefab1); }
-        else if (currentStage >= 3 && currentStage <= 5) { possibleEnemy.Add(enemyPrefab1); possibleEnemy.Add(enemyPrefab2); }
-        else { possibleEnemy.Add(enemyPrefab1); possibleEnemy.Add(enemyPrefab2); possibleEnemy.Add(enemyPrefab3); }
-        if (possibleEnemy.Count == 0) return;
-        GameObject prefabToSpawn = possibleEnemy[Random.Range(0, possibleEnemy.Count)];
-        if (prefabToSpawn == null) return;
+        List<string> possibleEnemyTags = new List<string>();
+        if (currentStage >= 1 && currentStage <= 2) { possibleEnemyTags.Add(enemyTag1); }
+        else if (currentStage >= 3 && currentStage <= 5) { possibleEnemyTags.Add(enemyTag1); possibleEnemyTags.Add(enemyTag2); }
+        else { possibleEnemyTags.Add(enemyTag1); possibleEnemyTags.Add(enemyTag2); possibleEnemyTags.Add(enemyTag3); }
+
+        if (possibleEnemyTags.Count == 0) return;
+
+        string tagToSpawn = possibleEnemyTags[Random.Range(0, possibleEnemyTags.Count)];
+
         Vector2 offset = Random.insideUnitCircle * 0.3f;
         Vector3 spawnPosition = spawnPoint.position + new Vector3(offset.x, offset.y, 0);
-        GameObject enemy = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
-        Enemy enemyScript = enemy.GetComponent<Enemy>();
+
+        GameObject enemyObj = ObjectPooler.Instance.SpawnFromPool(tagToSpawn, spawnPosition, Quaternion.identity);
+        if (enemyObj == null) return;
+
+        Enemy enemyScript = enemyObj.GetComponent<Enemy>();
         if (enemyScript != null)
         {
             enemyScript.spawnManager = this;
         }
+
         enemySpawnedThisStage++;
         aliveEnemies++;
-        Debug.Log($"�Ϲ� �� ����! ��������: {currentStage}, ������ ��: {enemySpawnedThisStage}/{enemyToSpawnThisStage}");
     }
+
 
     void SpawnBoss()
     {
-        if (enemySpawnPoints.Length > 4 && bossPrefab != null)
+        if (enemySpawnPoints.Length > 4)
         {
             Vector2 offset = Random.insideUnitCircle * 0.3f;
             Vector3 spawnPos = enemySpawnPoints[4].position + new Vector3(offset.x, offset.y, 0);
-            GameObject boss = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
-            Enemy enemyScript = boss.GetComponent<Enemy>();
+
+            GameObject bossObj = ObjectPooler.Instance.SpawnFromPool(bossTag, spawnPos, Quaternion.identity);
+            if (bossObj == null) return;
+
+            Enemy enemyScript = bossObj.GetComponent<Enemy>();
             if (enemyScript != null)
             {
                 enemyScript.spawnManager = this;
             }
+
             enemySpawnedThisStage++;
             aliveEnemies++;
-            Debug.Log($"���� ����! ��������: {currentStage}");
-        }
-        else
-        {
-            Debug.LogError("���� ���� ����: ��������Ʈ ����(5�� �̻� �ʿ�) �Ǵ� ���� ������ ����");
         }
     }
+
 
     void Shuffle<T>(List<T> list)
     {
@@ -188,23 +187,20 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+
     public void NotifyItemDropped()
     {
         hasItemDroppedThisStage = true;
     }
 
+
     private IEnumerator NextStageRoutine()
     {
-        Debug.Log($"�������� {currentStage} Ŭ����!");
         yield return new WaitForSeconds(stageClearDelay);
         currentStage++;
         if (currentStage <= maxStage)
         {
             StartStage(currentStage);
-        }
-        else
-        {
-            Debug.Log("��� �������� �Ϸ�! Ŭ����!");
         }
     }
 }

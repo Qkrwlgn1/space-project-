@@ -22,14 +22,12 @@ public class Item : MonoBehaviour
             PlayerController player = collision.GetComponent<PlayerController>();
             Debug.Log("Item collected by player");
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
     void OnBecameInvisible()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
-
-
 }

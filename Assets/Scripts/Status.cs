@@ -65,8 +65,6 @@ public class Status : MonoBehaviour
         {
             GetComponent<Button>().interactable = false;
         }
-
     }
-
     
 }

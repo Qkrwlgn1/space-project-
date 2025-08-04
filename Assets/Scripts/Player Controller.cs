@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
+
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -14,17 +15,26 @@ public class PlayerController : MonoBehaviour
     [Header("UI Objects")]
     public Status[] sta;
 
+    public string explosionEffectTag = "PlayerExplosion";
+    public string bulletTag = "PlayerBullet";
 
     public Transform childObject;
     public Transform bulletSpawnPointLv1;
+    public Transform[] bulletSpawnPointLv2;
+    public Transform[] bulletSpawnPointLv3;
 
     public EnemySpawnManager enemySpawnManager;
     public UIHPgauge uIHPgauge;
 
+    [Header("Fire Delay Settings")]
     public float bulletFireDelay;
-    public int playerHealth;
-    public int playerBulletDamage;
-    public int playerCurrentHealth;
+    public float fireDelayReduction; 
+    public float minFireDelay = 0.01f;
+
+    public float playerHealth;
+    private float playerCurrentHealth;
+    public float level = 1;
+    public float baseDamage;
     public float screenPadding;
 
     private Camera mainCamera;
@@ -70,21 +80,20 @@ public class PlayerController : MonoBehaviour
 
         if (y < 0)
         {
+            if (childObject != null)
+        {
             childObject.transform.localScale = new Vector3(1, 1, 1);
         }
-        else
-        {
-            childObject.transform.localScale = new Vector3(2, 2, 1);
-        }
-
-        if (y < 0)
-        {
             if (movement2D.moveSpeed >= movement2D.minSpeed)
             {
                 movement2D.moveSpeed--;
             }
         }
-        else if (y > 0)
+        else
+        {
+            childObject.transform.localScale = new Vector3(2, 2, 1);
+        }
+        if (y > 0)
         {
             if (movement2D.moveSpeed < 7f)
             {
@@ -95,7 +104,7 @@ public class PlayerController : MonoBehaviour
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         playerCurrentHealth -= damage;
         uIHPgauge.UpdateGauge(playerCurrentHealth);
@@ -107,23 +116,82 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        GameObject effect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(effect, 2f);
+        GameObject effect = ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
+        StartCoroutine(DisableAfterTime(effect, 2f));
+
         if (enemySpawnManager != null)
         {
             enemySpawnManager.isPlayerAlive = false;
         }
-        Destroy(gameObject);
+
+        gameObject.SetActive(false);
+    }
+
+    public void LevelUp()
+    {
+        level++;
+        Debug.Log("플레이어 레벨 1 상승 ! 현재 레벨 : " + level);
     }
 
     private IEnumerator AutoFireBullet()
     {
         while (true)
         {
-            var bullet = ObjectPoolManager.instance.Pool.Get();
-            bullet.transform.position = bulletSpawnPointLv1.position;
+            if ((int)level <= 1)
+            {
+                FireBullet(bulletSpawnPointLv1);
+            }
+            else if ((int)level == 2)
+            {
+                foreach (Transform spawnPoint in bulletSpawnPointLv2)
+                {
 
-            yield return new WaitForSeconds(bulletFireDelay);
+                    if (spawnPoint != null)
+                    {
+                        ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
+                    }
+
+                }
+            }
+            else if ((int)level >= 3)
+            {
+                foreach (Transform spawnPoint in bulletSpawnPointLv3)
+                {
+
+                    ObjectPooler.Instance.SpawnFromPool(bulletTag, bulletSpawnPointLv1.position, Quaternion.identity);
+                }
+            }
+
+            float currentFireDelay = bulletFireDelay - ((level - 1) * fireDelayReduction);
+
+            currentFireDelay = Mathf.Max(currentFireDelay, minFireDelay);
+
+            yield return new WaitForSeconds(currentFireDelay);
+        }
+    }
+
+
+    private void FireBullet(Transform spawnPoint)
+    {
+        if (spawnPoint == null) return;
+
+        GameObject bulletObj = Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
+
+        BulletController bulletScript = bulletObj.GetComponent<BulletController>();
+        if (bulletScript != null)
+        {
+            float calculatedDamage = baseDamage * level;
+
+            bulletScript.playerBulletDamage = calculatedDamage;
+        }
+    }
+
+    private IEnumerator DisableAfterTime(GameObject obj, float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (obj != null)
+        {
+            obj.SetActive(false);
         }
     }
 

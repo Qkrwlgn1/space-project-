@@ -1,11 +1,10 @@
 using UnityEngine;
-using UnityEngine.Pool;
-using System.Collections;
+
 public class BulletController : MonoBehaviour
 {
-    public IObjectPool<GameObject> Pool { get; set; }
     public float bulletSpeed;
-    public PlayerController playerCon;
+    public float playerBulletDamage;
+
 
     void Update()
     {
@@ -15,6 +14,11 @@ public class BulletController : MonoBehaviour
         transform.Translate(Vector3.up * bulletSpeed * Time.deltaTime);
     }
 
+    void OnBecameInvisible()
+    {
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
@@ -22,15 +26,10 @@ public class BulletController : MonoBehaviour
             Enemy enemy = collision.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(playerCon.playerBulletDamage);
+                enemy.TakeDamage(playerBulletDamage);
             }
-            Pool.Release(this.gameObject);
+            Destroy(gameObject);
         }
-    }
-
-    private void OnBecameInvisible()
-    {
-        Pool.Release(this.gameObject);
     }
 
 }
