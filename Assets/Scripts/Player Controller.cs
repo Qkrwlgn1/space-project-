@@ -9,46 +9,45 @@ public class PlayerController : MonoBehaviour
 
     public static bool isPaused = false;
 
-    public GameObject explosionEffectPrefab;
-    public GameObject bulletPrefab;
-
     [Header("UI Objects")]
     public Status[] sta;
 
+    [Header("Pool Tags")]
     public string explosionEffectTag = "PlayerExplosion";
     public string bulletTag = "PlayerBullet";
 
+    [Header("Object References")]
     public Transform childObject;
     public Transform bulletSpawnPointLv1;
     public Transform[] bulletSpawnPointLv2;
     public Transform[] bulletSpawnPointLv3;
-
     public EnemySpawnManager enemySpawnManager;
     public UIHPgauge uIHPgauge;
 
-    [Header("Fire Delay Settings")]
-    public float bulletFireDelay;
-    public float fireDelayReduction; 
-    public float minFireDelay = 0.01f;
-
+    [Header("Stats")]
     public float playerHealth;
-    private float playerCurrentHealth;
     public float level = 1;
     public float baseDamage;
+
+    [Header("Fire Delay Settings")]
+    public float bulletFireDelay;
+    public float fireDelayReduction;
+    public float minFireDelay = 0.01f;
+
+    [Header("Screen Bounds")]
     public float screenPadding;
 
+    private float playerCurrentHealth;
     private Camera mainCamera;
     private Vector2 screenBounds;
     private Movement2D movement2D;
-
-
 
     void Awake()
     {
         movement2D = GetComponent<Movement2D>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
-
     }
+
     void Start()
     {
         playerCurrentHealth = playerHealth;
@@ -60,7 +59,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.instance.isLive)
+        if (GameManager.instance != null && !GameManager.instance.isLive)
             return;
         Move();
     }
@@ -81,26 +80,24 @@ public class PlayerController : MonoBehaviour
         if (y < 0)
         {
             if (childObject != null)
-        {
-            childObject.transform.localScale = new Vector3(1, 1, 1);
-        }
-            if (movement2D.moveSpeed >= movement2D.minSpeed)
-            {
-                movement2D.moveSpeed--;
-            }
+                childObject.transform.localScale = new Vector3(1, 1, 1);
         }
         else
         {
-            childObject.transform.localScale = new Vector3(2, 2, 1);
-        }
-        if (y > 0)
-        {
-            if (movement2D.moveSpeed < 7f)
-            {
-                movement2D.moveSpeed++;
-            }
+            if (childObject != null)
+                childObject.transform.localScale = new Vector3(2, 2, 1);
         }
 
+        if (y < 0)
+        {
+            if (movement2D.moveSpeed >= movement2D.minSpeed)
+                movement2D.moveSpeed--;
+        }
+        else if (y > 0)
+        {
+            if (movement2D.moveSpeed < 7f)
+                movement2D.moveSpeed++;
+        }
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
@@ -123,20 +120,24 @@ public class PlayerController : MonoBehaviour
         {
             enemySpawnManager.isPlayerAlive = false;
         }
-
         gameObject.SetActive(false);
     }
 
     public void LevelUp()
     {
         level++;
-        Debug.Log("플레이어 레벨 1 상승 ! 현재 레벨 : " + level);
     }
 
     private IEnumerator AutoFireBullet()
     {
         while (true)
         {
+            if (GameManager.instance != null && !GameManager.instance.isLive)
+            {
+                yield return null;
+                continue;
+            }
+
             if ((int)level <= 1)
             {
                 FireBullet(bulletSpawnPointLv1);
@@ -145,43 +146,35 @@ public class PlayerController : MonoBehaviour
             {
                 foreach (Transform spawnPoint in bulletSpawnPointLv2)
                 {
-
-                    if (spawnPoint != null)
-                    {
-                        ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
-                    }
-
+                    FireBullet(spawnPoint);
                 }
             }
             else if ((int)level >= 3)
             {
                 foreach (Transform spawnPoint in bulletSpawnPointLv3)
                 {
-
-                    ObjectPooler.Instance.SpawnFromPool(bulletTag, bulletSpawnPointLv1.position, Quaternion.identity);
+                    FireBullet(spawnPoint);
                 }
             }
 
             float currentFireDelay = bulletFireDelay - ((level - 1) * fireDelayReduction);
-
             currentFireDelay = Mathf.Max(currentFireDelay, minFireDelay);
-
             yield return new WaitForSeconds(currentFireDelay);
         }
     }
-
 
     private void FireBullet(Transform spawnPoint)
     {
         if (spawnPoint == null) return;
 
-        GameObject bulletObj = Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
+        GameObject bulletObj = ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
+
+        if (bulletObj == null) return;
 
         BulletController bulletScript = bulletObj.GetComponent<BulletController>();
         if (bulletScript != null)
         {
             float calculatedDamage = baseDamage * level;
-
             bulletScript.playerBulletDamage = calculatedDamage;
         }
     }
@@ -199,11 +192,13 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Item"))
         {
-            StartCoroutine(GameManager.instance.ItemSellectBars());
+            if (GameManager.instance != null)
+            {
+                StartCoroutine(GameManager.instance.ItemSellectBars());
+            }
         }
     }
 
-    
     public void Next()
     {
         foreach (Status status in sta)
@@ -221,11 +216,10 @@ public class PlayerController : MonoBehaviour
 
             if (ran[0] != ran[1] && ran[1] != ran[2] && ran[0] != ran[2])
             {
-                Debug.Log("Date existing");
                 break;
             }
         }
-        
+
         for (int i = 0; i < ran.Length; i++)
         {
             Status ranSta = sta[ran[i]];
@@ -240,5 +234,4 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
 }

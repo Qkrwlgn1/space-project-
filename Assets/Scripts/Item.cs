@@ -20,7 +20,8 @@ public class Item : MonoBehaviour
         {
             
             PlayerController player = collision.GetComponent<PlayerController>();
-            Debug.Log("Item collected by player");
+
+            player.LevelUp();
 
             gameObject.SetActive(false);
         }

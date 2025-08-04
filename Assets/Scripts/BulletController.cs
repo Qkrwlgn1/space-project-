@@ -16,7 +16,7 @@ public class BulletController : MonoBehaviour
 
     void OnBecameInvisible()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -28,7 +28,7 @@ public class BulletController : MonoBehaviour
             {
                 enemy.TakeDamage(playerBulletDamage);
             }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 

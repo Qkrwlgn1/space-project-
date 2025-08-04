@@ -2166,10 +2166,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a70c820181e41743be79756304fda36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab1: {fileID: 1493619720853737233, guid: 7102eeb17d1f00d428acfec3df3cea93, type: 3}
-  enemyPrefab2: {fileID: 461341101278608393, guid: 1942c5136c3733749bce4b5a16bcb193, type: 3}
-  enemyPrefab3: {fileID: 4542640238752392362, guid: 2004f922ef486cb42b73f550ad87123c, type: 3}
-  bossPrefab: {fileID: 1152912746537783043, guid: ff676b32ee0d60245a368f22f5b75275, type: 3}
+  enemyTag1: Enemy1
+  enemyTag2: Enemy2
+  enemyTag3: Enemy3
+  bossTag: Boss
+  guaranteedItemTag: Item
   enemySpawnPoints:
   - {fileID: 952718121}
   - {fileID: 293119984}
@@ -2182,7 +2183,6 @@ MonoBehaviour:
   maxAliveEnemies: 10
   isPlayerAlive: 1
   stageClearDelay: 3
-  guaranteedItemPrefab: {fileID: 0}
 --- !u!4 &890979127
 Transform:
   m_ObjectHideFlags: 0
@@ -3430,12 +3430,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 1835739716}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2a0d9f9f5fe1be428cad0306c547eb4, type: 3}
+  m_Script: {fileID: 11500000, guid: ab4381bd49316cc4aa3ad17795f59acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultCapacity: 5
-  maxPoolSize: 15
-  bulletPrefab: {fileID: 1860706049015914, guid: 0b0c27137eb4d504096874b80ace66bd, type: 3}
+  pools:
+  - tag: PlayerExplosion
+    prefab: {fileID: 725748389856807714, guid: 1dcde77d9c9f59747896a0fa460feeb6, type: 3}
+    size: 2
+  - tag: PlayerBullet
+    prefab: {fileID: 1860706049015914, guid: 0b0c27137eb4d504096874b80ace66bd, type: 3}
+    size: 100
+  - tag: Enemy1
+    prefab: {fileID: 1493619720853737233, guid: 7102eeb17d1f00d428acfec3df3cea93, type: 3}
+    size: 10
+  - tag: Enemy2
+    prefab: {fileID: 461341101278608393, guid: 1942c5136c3733749bce4b5a16bcb193, type: 3}
+    size: 10
+  - tag: Enemy3
+    prefab: {fileID: 4542640238752392362, guid: 2004f922ef486cb42b73f550ad87123c, type: 3}
+    size: 10
+  - tag: Boss
+    prefab: {fileID: 1152912746537783043, guid: ff676b32ee0d60245a368f22f5b75275, type: 3}
+    size: 2
+  - tag: Item
+    prefab: {fileID: 820506492106638615, guid: 90542482164ea0047a9b6dbf24286c36, type: 3}
+    size: 2
+  - tag: EnemyExplosion
+    prefab: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+    size: 10
+  - tag: EnemyBullet
+    prefab: {fileID: 6798610446988078174, guid: 3412d185171bcd649a794764e65e0d2d, type: 3}
+    size: 100
 --- !u!4 &1835739718
 Transform:
   m_ObjectHideFlags: 0

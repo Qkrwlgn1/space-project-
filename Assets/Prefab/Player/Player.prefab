@@ -433,10 +433,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigid: {fileID: 6272145993284007001}
-  explosionEffectPrefab: {fileID: 2433282508537954060, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
-  bulletPrefab: {fileID: 1860706049015914, guid: 0b0c27137eb4d504096874b80ace66bd, type: 3}
-  itemBack: {fileID: 0}
-  spawnBars: {fileID: 0}
+  sta: []
+  explosionEffectTag: PlayerExplosion
+  bulletTag: PlayerBullet
   childObject: {fileID: 8826987413122290447}
   bulletSpawnPointLv1: {fileID: 3225669756380689103}
   bulletSpawnPointLv2:
@@ -448,12 +447,12 @@ MonoBehaviour:
   - {fileID: 109285504499037811}
   enemySpawnManager: {fileID: 0}
   uIHPgauge: {fileID: 0}
+  playerHealth: 10
+  level: 1
+  baseDamage: 10
   bulletFireDelay: 0.15
   fireDelayReduction: 0.03
   minFireDelay: 0.06
-  playerHealth: 10
-  level: 3
-  baseDamage: 10
   screenPadding: 0.7
 --- !u!114 &2391615241173966709
 MonoBehaviour:

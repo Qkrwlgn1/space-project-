@@ -42,11 +42,13 @@ public class Enemy : MonoBehaviour
     private Vector3 moveDestination;
     private Vector3 gizmoTargetPosition;
 
+    private bool isDead = false;
 
     void OnEnable()
     {
         enemyCurrentHealth = enemyHealth;
         hasEnteredScreen = false;
+        isDead = false;
 
         if (mainCamera == null) mainCamera = Camera.main;
         CalculateScreenBounds();
@@ -64,10 +66,9 @@ public class Enemy : MonoBehaviour
         StartCoroutine(UpdateRandomMovement());
     }
 
-
     void Update()
     {
-        if (!GameManager.instance.isLive)
+        if (GameManager.instance != null && !GameManager.instance.isLive)
             return;
 
         if (!hasEnteredScreen)
@@ -97,9 +98,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float damage)
+    {
+        if (isDead) return;
+
+        enemyCurrentHealth -= damage;
+        Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);
+        if (enemyCurrentHealth <= 0)
+        {
+            Die();
+        }
+    }
 
     public void Die()
     {
+        if (isDead) return;
+        isDead = true;
+
         GameObject effect = ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
         StartCoroutine(DisableAfterTime(effect, 2f));
 
@@ -116,7 +131,6 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
     private void SpawnItem()
     {
         if (spawnManager != null && !spawnManager.HasItemDroppedThisStage)
@@ -128,7 +142,6 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
 
     private IEnumerator AutoFire()
     {
@@ -160,7 +173,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
     private IEnumerator DisableAfterTime(GameObject obj, float time)
     {
         yield return new WaitForSeconds(time);
@@ -169,8 +181,6 @@ public class Enemy : MonoBehaviour
             obj.SetActive(false);
         }
     }
-
-
 
     private Vector3 CalculateAvoidanceVector()
     {
@@ -192,7 +202,6 @@ public class Enemy : MonoBehaviour
         return avoidanceVector.normalized;
     }
 
-
     private IEnumerator UpdateRandomMovement()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
@@ -207,7 +216,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
     void MoveToEnterScreen()
     {
         Vector3 screenCenter = Vector3.zero;
@@ -219,7 +227,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
     bool IsWithinScreenBounds()
     {
         Vector3 pos = transform.position;
@@ -229,23 +236,10 @@ public class Enemy : MonoBehaviour
                pos.y <= screenBounds.y - screenBoundsPadding;
     }
 
-
     void CalculateScreenBounds()
     {
         if (mainCamera == null) return;
         float distance = Vector3.Distance(transform.position, mainCamera.transform.position);
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, distance));
     }
-
-    public void TakeDamage(float damage)
-    {
-        enemyCurrentHealth -= damage;
-        Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);
-        if (enemyCurrentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-
 }

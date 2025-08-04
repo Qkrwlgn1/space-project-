@@ -13,35 +13,32 @@ public class ObjectPooler : MonoBehaviour
 
     public static ObjectPooler Instance;
 
-    public List<Pool> pools;
-    public Dictionary<string, Queue<GameObject>> poolDictionary;
-
-
     private void Awake()
     {
         Instance = this;
     }
 
+    public List<Pool> pools;
+    public Dictionary<string, List<GameObject>> poolDictionary;
 
     void Start()
     {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
+        poolDictionary = new Dictionary<string, List<GameObject>>();
 
         foreach (Pool pool in pools)
         {
-            Queue<GameObject> objectPool = new Queue<GameObject>();
+            List<GameObject> objectPool = new List<GameObject>();
 
             for (int i = 0; i < pool.size; i++)
             {
                 GameObject obj = Instantiate(pool.prefab);
                 obj.SetActive(false);
-                objectPool.Enqueue(obj);
+                objectPool.Add(obj);
             }
 
             poolDictionary.Add(pool.tag, objectPool);
         }
     }
-
 
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
     {
@@ -51,14 +48,16 @@ public class ObjectPooler : MonoBehaviour
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
-
-        objectToSpawn.SetActive(true);
-        objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = rotation;
-
-        poolDictionary[tag].Enqueue(objectToSpawn);
-
-        return objectToSpawn;
+        foreach (GameObject obj in poolDictionary[tag])
+        {
+            if (!obj.activeInHierarchy)
+            {
+                obj.SetActive(true);
+                obj.transform.position = position;
+                obj.transform.rotation = rotation;
+                return obj;
+            }
+        }
+        return null;
     }
 }
