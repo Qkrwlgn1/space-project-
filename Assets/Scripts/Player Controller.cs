@@ -6,23 +6,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rigid;
 
-    public static bool isPaused = false;
-
-    public GameObject explosionEffectPrefab;
-    public GameObject bulletPrefab;
-
-    [Header("UI Objects")]
-    [SerializeField] private GameObject itemBack;
-    [SerializeField] private GameObject spawnBars;
+    public string explosionEffectTag = "PlayerExplosion";
+    public string bulletTag = "PlayerBullet";
 
     public Transform childObject;
     public Transform bulletSpawnPointLv1;
     public Transform[] bulletSpawnPointLv2;
     public Transform[] bulletSpawnPointLv3;
 
-
     public EnemySpawnManager enemySpawnManager;
-    public UIHPgauge uIHPgauge;
 
     [Header("Fire Delay Settings")]
     public float bulletFireDelay;
@@ -38,6 +30,10 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private Vector2 screenBounds;
     private Movement2D movement2D;
+
+    [Header("UI Objects")]
+    [SerializeField] private GameObject itemBack;
+    [SerializeField] private GameObject spawnBars;
 
     void Start()
     {
@@ -67,12 +63,15 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
-
         if (y < 0)
         {
             if (childObject != null)
             {
                 childObject.transform.localScale = new Vector3(1, 1, 1);
+            }
+            if (movement2D.moveSpeed >= movement2D.minSpeed)
+            {
+                movement2D.moveSpeed--;
             }
         }
         else
@@ -82,29 +81,20 @@ public class PlayerController : MonoBehaviour
                 childObject.transform.localScale = new Vector3(2, 2, 1);
             }
         }
-
-        if (y < 0)
-        {
-            if (movement2D.moveSpeed >= movement2D.minSpeed)
-            {
-                movement2D.moveSpeed--;
-            }
-        }
-        else if (y > 0)
+        if (y > 0)
         {
             if (movement2D.moveSpeed < 7f)
             {
                 movement2D.moveSpeed++;
             }
         }
-
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
     public void TakeDamage(float damage)
     {
         playerCurrentHealth -= damage;
-        uIHPgauge.UpdateGauge(playerCurrentHealth);
+        Debug.Log("Player Health : " + playerCurrentHealth);
         if (playerCurrentHealth <= 0)
         {
             Die();
@@ -113,19 +103,21 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        GameObject effect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(effect, 2f);
+        GameObject effect = ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
+        StartCoroutine(DisableAfterTime(effect, 2f));
+
         if (enemySpawnManager != null)
         {
             enemySpawnManager.isPlayerAlive = false;
         }
-        Destroy(gameObject);
+
+        gameObject.SetActive(false);
     }
 
     public void LevelUp()
     {
         level++;
-        Debug.Log("ÇÃ·¹ÀÌ¾î ·¹º§ 1 »ó½Â ! ÇöÀç ·¹º§ : " + level);
+        Debug.Log("í”Œë ˆì´ì–´ ë ˆë²¨ 1 ìƒìŠ¹ ! í˜„ìž¬ ë ˆë²¨ : " + level);
     }
 
     private IEnumerator AutoFireBullet()
@@ -140,14 +132,20 @@ public class PlayerController : MonoBehaviour
             {
                 foreach (Transform spawnPoint in bulletSpawnPointLv2)
                 {
-                    FireBullet(spawnPoint);
+
+                    if (spawnPoint != null)
+                    {
+                        ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
+                    }
+
                 }
             }
             else if ((int)level >= 3)
             {
                 foreach (Transform spawnPoint in bulletSpawnPointLv3)
                 {
-                    FireBullet(spawnPoint);
+
+                    ObjectPooler.Instance.SpawnFromPool(bulletTag, bulletSpawnPointLv1.position, Quaternion.identity);
                 }
             }
 
@@ -175,6 +173,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private IEnumerator DisableAfterTime(GameObject obj, float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (obj != null)
+        {
+            obj.SetActive(false);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Item"))
@@ -198,5 +205,4 @@ public class PlayerController : MonoBehaviour
         itemBack.SetActive(false);
         spawnBars.SetActive(false);
     }
-
 }

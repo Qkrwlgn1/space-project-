@@ -243,12 +243,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyHealth: 12
-  explosionEffectPrefab: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
-  enemyBulletPrefab: {fileID: 2508814619514582746, guid: ae98dba45c096f84586875802cc273d1, type: 3}
-  dropItemPrefab:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  explosionEffectTag: EnemyExplosion
+  enemyBulletTag: EnemyBullet
+  dropItemTag: Item
   enemyFireDelay: 0.3
   predictionTime: 0.5
   isDropItem: 1
@@ -259,7 +256,7 @@ MonoBehaviour:
   maxMoveWaitTime: 3
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   avoidanceRadius: 1
   avoidanceForce: 5
   screenBoundsPadding: 0.5

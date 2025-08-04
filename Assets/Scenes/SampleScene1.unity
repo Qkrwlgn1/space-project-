@@ -1003,6 +1003,96 @@ Transform:
   m_Children: []
   m_Father: {fileID: 890979127}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &797362043
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 797362045}
+  - component: {fileID: 797362044}
+  m_Layer: 0
+  m_Name: Object Poller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &797362044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797362043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab4381bd49316cc4aa3ad17795f59acb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pools:
+  - tag: PlayerExplosion
+    prefab: {fileID: 725748389856807714, guid: 1dcde77d9c9f59747896a0fa460feeb6, type: 3}
+    size: 1
+  - tag: PlayerBullet
+    prefab: {fileID: 1860706049015914, guid: 0b0c27137eb4d504096874b80ace66bd, type: 3}
+    size: 50
+  - tag: EnemyExplosion
+    prefab: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+    size: 10
+  - tag: EnemyBullet
+    prefab: {fileID: 6798610446988078174, guid: 3412d185171bcd649a794764e65e0d2d, type: 3}
+    size: 25
+  - tag: Item
+    prefab: {fileID: 820506492106638615, guid: 90542482164ea0047a9b6dbf24286c36, type: 3}
+    size: 3
+  - tag: Enemy1
+    prefab: {fileID: 1493619720853737233, guid: 7102eeb17d1f00d428acfec3df3cea93, type: 3}
+    size: 10
+  - tag: Enemy2
+    prefab: {fileID: 461341101278608393, guid: 1942c5136c3733749bce4b5a16bcb193, type: 3}
+    size: 10
+  - tag: Enemy3
+    prefab: {fileID: 4542640238752392362, guid: 2004f922ef486cb42b73f550ad87123c, type: 3}
+    size: 10
+  - tag: Boss
+    prefab: {fileID: 1152912746537783043, guid: ff676b32ee0d60245a368f22f5b75275, type: 3}
+    size: 2
+  - tag: 
+    prefab: {fileID: 0}
+    size: 0
+  - tag: 
+    prefab: {fileID: 0}
+    size: 0
+  - tag: 
+    prefab: {fileID: 0}
+    size: 0
+  - tag: 
+    prefab: {fileID: 0}
+    size: 0
+  - tag: 
+    prefab: {fileID: 0}
+    size: 0
+  - tag: 
+    prefab: {fileID: 0}
+    size: 0
+--- !u!4 &797362045
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797362043}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.12728173, y: -0.26349425, z: -0.046346355}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &841014992 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 460324476430846507, guid: ec74b4ba35212d44aa591198f931d80b, type: 3}
@@ -1162,10 +1252,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a70c820181e41743be79756304fda36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab1: {fileID: 1493619720853737233, guid: 7102eeb17d1f00d428acfec3df3cea93, type: 3}
-  enemyPrefab2: {fileID: 461341101278608393, guid: 1942c5136c3733749bce4b5a16bcb193, type: 3}
-  enemyPrefab3: {fileID: 4542640238752392362, guid: 2004f922ef486cb42b73f550ad87123c, type: 3}
-  bossPrefab: {fileID: 1152912746537783043, guid: ff676b32ee0d60245a368f22f5b75275, type: 3}
+  enemyTag1: Enemy1
+  enemyTag2: Enemy2
+  enemyTag3: Enemy3
+  bossTag: Boss
+  guaranteedItemTag: Item
   enemySpawnPoints:
   - {fileID: 952718121}
   - {fileID: 293119984}
@@ -1178,7 +1269,6 @@ MonoBehaviour:
   maxAliveEnemies: 10
   isPlayerAlive: 1
   stageClearDelay: 3
-  guaranteedItemPrefab: {fileID: 0}
 --- !u!4 &890979127
 Transform:
   m_ObjectHideFlags: 0
@@ -2682,3 +2772,4 @@ SceneRoots:
   - {fileID: 1282567060}
   - {fileID: 626514755}
   - {fileID: 1566766758240213961}
+  - {fileID: 797362045}
