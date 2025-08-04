@@ -3,11 +3,13 @@ using UnityEngine;
 public class EnemyBulletController : MonoBehaviour
 {
     public float enemyBulletSpeed;
-    public float enemyBulletDamage;
+    public int enemyBulletDamage;
 
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         transform.position += -transform.up * enemyBulletSpeed * Time.deltaTime;
     }
 

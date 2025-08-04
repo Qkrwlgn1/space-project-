@@ -67,6 +67,9 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         if (!hasEnteredScreen)
         {
             if (moveDestination == Vector3.zero)
@@ -168,16 +171,6 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void TakeDamage(float damage)
-    {
-        enemyCurrentHealth -= damage;
-        Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);
-        if (enemyCurrentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
 
     private Vector3 CalculateAvoidanceVector()
     {
@@ -244,23 +237,15 @@ public class Enemy : MonoBehaviour
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, distance));
     }
 
-
-    void OnDrawGizmosSelected()
+    public void TakeDamage(float damage)
     {
-        if (mainCamera == null) return;
-        Gizmos.color = Color.red;
-        Vector3 boundsCenter = new Vector3(0, screenBounds.y / 2, 0);
-        Vector3 boundsSize = new Vector3((screenBounds.x - screenBoundsPadding) * 2, screenBounds.y, 0);
-        Gizmos.DrawWireCube(boundsCenter, boundsSize);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(moveDestination, 0.3f);
-        Gizmos.DrawLine(transform.position, moveDestination);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, avoidanceRadius);
-        if (player != null)
+        enemyCurrentHealth -= damage;
+        Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);
+        if (enemyCurrentHealth <= 0)
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, gizmoTargetPosition);
+            Die();
         }
     }
+
+
 }

@@ -1,10 +1,19 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private Rigidbody2D rigid;
+
+    public static bool isPaused = false;
+
+    public GameObject explosionEffectPrefab;
+    public GameObject bulletPrefab;
+
+    [Header("UI Objects")]
+    public Status[] sta;
 
     public string explosionEffectTag = "PlayerExplosion";
     public string bulletTag = "PlayerBullet";
@@ -15,6 +24,7 @@ public class PlayerController : MonoBehaviour
     public Transform[] bulletSpawnPointLv3;
 
     public EnemySpawnManager enemySpawnManager;
+    public UIHPgauge uIHPgauge;
 
     [Header("Fire Delay Settings")]
     public float bulletFireDelay;
@@ -31,14 +41,16 @@ public class PlayerController : MonoBehaviour
     private Vector2 screenBounds;
     private Movement2D movement2D;
 
-    [Header("UI Objects")]
-    [SerializeField] private GameObject itemBack;
-    [SerializeField] private GameObject spawnBars;
 
-    void Start()
+
+    void Awake()
     {
         movement2D = GetComponent<Movement2D>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
+
+    }
+    void Start()
+    {
         playerCurrentHealth = playerHealth;
         StartCoroutine(AutoFireBullet());
 
@@ -48,6 +60,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         Move();
     }
 
@@ -63,12 +77,13 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
+
         if (y < 0)
         {
             if (childObject != null)
-            {
-                childObject.transform.localScale = new Vector3(1, 1, 1);
-            }
+        {
+            childObject.transform.localScale = new Vector3(1, 1, 1);
+        }
             if (movement2D.moveSpeed >= movement2D.minSpeed)
             {
                 movement2D.moveSpeed--;
@@ -76,10 +91,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (childObject != null)
-            {
-                childObject.transform.localScale = new Vector3(2, 2, 1);
-            }
+            childObject.transform.localScale = new Vector3(2, 2, 1);
         }
         if (y > 0)
         {
@@ -88,13 +100,14 @@ public class PlayerController : MonoBehaviour
                 movement2D.moveSpeed++;
             }
         }
+
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
     public void TakeDamage(float damage)
     {
         playerCurrentHealth -= damage;
-        Debug.Log("Player Health : " + playerCurrentHealth);
+        uIHPgauge.UpdateGauge(playerCurrentHealth);
         if (playerCurrentHealth <= 0)
         {
             Die();
@@ -186,23 +199,46 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Item"))
         {
-
-            StartCoroutine(ItemSellectBars());
+            StartCoroutine(GameManager.instance.ItemSellectBars());
         }
     }
 
-    IEnumerator ItemSellectBars()
+    
+    public void Next()
     {
-        itemBack.SetActive(true);
+        foreach (Status status in sta)
+        {
+            status.gameObject.SetActive(false);
+        }
 
-        yield return new WaitForSeconds(1f);
+        int[] ran = new int[3];
 
-        spawnBars.SetActive(true);
+        while (true)
+        {
+            ran[0] = Random.Range(0, sta.Length);
+            ran[1] = Random.Range(0, sta.Length);
+            ran[2] = Random.Range(0, sta.Length);
+
+            if (ran[0] != ran[1] && ran[1] != ran[2] && ran[0] != ran[2])
+            {
+                Debug.Log("Date existing");
+                break;
+            }
+        }
+        
+        for (int i = 0; i < ran.Length; i++)
+        {
+            Status ranSta = sta[ran[i]];
+
+            if (ranSta.level == 5)
+            {
+                ranSta.gameObject.SetActive(false);
+            }
+            else
+            {
+                ranSta.gameObject.SetActive(true);
+            }
+        }
     }
-
-    public void DeActiveItemSellectBars()
-    {
-        itemBack.SetActive(false);
-        spawnBars.SetActive(false);
-    }
+    
 }

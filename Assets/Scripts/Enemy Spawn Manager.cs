@@ -37,6 +37,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     void Start()
     {
+
         if (enemySpawnPoints == null || enemySpawnPoints.Length == 0)
         {
             int childCount = transform.childCount;
@@ -46,18 +47,16 @@ public class EnemySpawnManager : MonoBehaviour
                 enemySpawnPoints[i] = transform.GetChild(i);
             }
         }
-        if (enemySpawnPoints.Length == 0)
-        {
-            Debug.LogError("EnemySpawnManager: 스폰 포인트가 설정되지 않았습니다!");
-            return;
-        }
-        Debug.Log($"스폰 포인트 개수: {enemySpawnPoints.Length}");
+        
         StartStage(currentStage);
     }
 
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         if (!isPlayerAlive || currentStage > maxStage || enemySpawnedThisStage >= enemyToSpawnThisStage || isStageTransitioning)
             return;
 
@@ -83,7 +82,6 @@ public class EnemySpawnManager : MonoBehaviour
     public void OnEnemyKilled(Vector3 deadEnemyPosition)
     {
         aliveEnemies--;
-        Debug.Log($"적 처치! 남은 적: {aliveEnemies}");
 
         if (!isStageTransitioning && enemySpawnedThisStage >= enemyToSpawnThisStage && aliveEnemies <= 0)
         {
@@ -91,7 +89,6 @@ public class EnemySpawnManager : MonoBehaviour
 
             if (!hasItemDroppedThisStage)
             {
-                Debug.Log("확정 아이템 드랍! (마지막 적)");
                 ObjectPooler.Instance.SpawnFromPool(guaranteedItemTag, deadEnemyPosition, Quaternion.identity);
             }
             StartCoroutine(NextStageRoutine());
@@ -109,8 +106,6 @@ public class EnemySpawnManager : MonoBehaviour
         bool spawnBoss = (stage % 5 == 0);
         if (spawnBoss)
             enemyToSpawnThisStage += 1;
-
-        Debug.Log($"스테이지 {stage} 시작! 스폰할 적의 수: {enemyToSpawnThisStage}");
     }
 
 
@@ -156,7 +151,6 @@ public class EnemySpawnManager : MonoBehaviour
 
         enemySpawnedThisStage++;
         aliveEnemies++;
-        Debug.Log($"일반 적 스폰! 스테이지: {currentStage}, 스폰된 수: {enemySpawnedThisStage}/{enemyToSpawnThisStage}");
     }
 
 
@@ -178,7 +172,6 @@ public class EnemySpawnManager : MonoBehaviour
 
             enemySpawnedThisStage++;
             aliveEnemies++;
-            Debug.Log($"보스 스폰! 스테이지: {currentStage}");
         }
     }
 
@@ -203,16 +196,11 @@ public class EnemySpawnManager : MonoBehaviour
 
     private IEnumerator NextStageRoutine()
     {
-        Debug.Log($"스테이지 {currentStage} 클리어!");
         yield return new WaitForSeconds(stageClearDelay);
         currentStage++;
         if (currentStage <= maxStage)
         {
             StartStage(currentStage);
-        }
-        else
-        {
-            Debug.Log("모든 스테이지 완료! 클리어!");
         }
     }
 }

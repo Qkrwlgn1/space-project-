@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool isGameStarted;
+    public static GameManager instance;
+    public bool isGameStarted;
+    public bool isLive;
 
     [Header("Game Objects")]
     public GameObject playerObject;
@@ -21,21 +24,18 @@ public class GameManager : MonoBehaviour
     [Header("Enternal Scripts")]
     public EnemySpawnManager enemySpawn;
 
+    public PlayerController playerCon;
+    [SerializeField] private GameObject itemBack;
+    [SerializeField] private GameObject statusBars;
+
     void Awake()
     {
+        instance = this;
         isGameStarted = false;
-
-        if (playerObject != null)
-            playerObject.SetActive(false);
-        if (enemySpawnObject != null)
-            enemySpawnObject.SetActive(false);
-        if (hp_Gauge != null)
-            hp_Gauge.SetActive(false);
-
-        if (backgroundObject != null)
-        {
-            backgroundObject.SetActive(true);
-        }
+        playerObject.SetActive(false);
+        enemySpawnObject.SetActive(false);
+        hp_Gauge.SetActive(false);
+        backgroundObject.SetActive(true);
     }
 
     void Update()
@@ -46,32 +46,20 @@ public class GameManager : MonoBehaviour
             enabled = false;
         }
     }
-    
+
 
     public void StartGame()
     {
         if (!isGameStarted)
         {
             isGameStarted = true;
-
-            if(playerObject != null)
-                playerObject.SetActive(true);
-            if(enemySpawnObject != null)
-                enemySpawnObject.SetActive(true);
-            if (hp_Gauge != null)
-                hp_Gauge.SetActive(true);
+            playerObject.SetActive(true);
+            enemySpawnObject.SetActive(true);
+            hp_Gauge.SetActive(true);
+            startButtonUI.SetActive(false);
+            Destroy(backgroundObject);
 
 
-            if (startButtonUI != null)
-                startButtonUI.SetActive(false);
-
-
-            if(backgroundObject != null)
-            {
-                Destroy(backgroundObject);
-            }
-
-            // 스테이지 로드
             int stageloadIndex = 1;
             stageloadIndex = enemySpawn.currentStage;
 
@@ -88,20 +76,46 @@ public class GameManager : MonoBehaviour
         if (stageIndex > 0 && stageIndex <= stagePrefabs.Length)
         {
             currentStageObject = Instantiate(stagePrefabs[stageIndex - 1]);
-            currentStageObject.transform.position = new Vector3(-2.8f, -0.5f, 0); // Reset position
-        }
-        else
-        {
-            Debug.LogWarning("Stage index out of bounds or prefab is null.");
+            currentStageObject.transform.position = new Vector3(-2.8f, -0.5f, 0);
         }
     }
 
-    // 이 함수는 나중에 스테이지 클리어 시 호출하면 됨
     public void NextStage()
     {
         currentStage++;
         LoadStage(currentStage);
     }
 
-    
+    public void Stop()
+    {
+        isLive = false;
+        Time.timeScale = 0;
+    }
+
+    public void Resume()
+    {
+        isLive = true;
+        Time.timeScale = 1;
+    }
+
+    public IEnumerator ItemSellectBars()
+    {
+
+        itemBack.SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        playerCon.Next();
+        statusBars.SetActive(true);
+
+        Stop();
+    }
+
+    public IEnumerator StatusSellectBarsBack()
+    {
+        itemBack.SetActive(false);
+        statusBars.SetActive(false);
+        Resume();
+        yield return new WaitForSeconds(0f);
+    }
 }

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Enemy
   - Item
+  - Bullet
+  - FxTemporaire
+  - GameManager
   layers:
   - Default
   - TransparentFX

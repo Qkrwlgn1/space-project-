@@ -5,8 +5,12 @@ public class BulletController : MonoBehaviour
     public float bulletSpeed;
     public float playerBulletDamage;
 
+
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+            
         transform.Translate(Vector3.up * bulletSpeed * Time.deltaTime);
     }
 
@@ -27,4 +31,5 @@ public class BulletController : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }

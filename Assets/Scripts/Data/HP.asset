@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8848f1f4607770442b75918fd91a60e4, type: 3}
+  m_Name: HP
+  m_EditorClassIdentifier: 
+  statusType: 0
+  statusId: 0
+  statusName: HP_UP
+  statusDesc: HP +{0} UP!!
+  statusIcon: {fileID: 381300419, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+  HP: 10
+  Damage: 0
+  Speed: 0
+  WeaponNumber: 0
+  BulletSize: 0
+  Status_Int: 0a0000000f00000014000000190000001e000000
+  Status_Flot: []
+  statusTile: {fileID: 0}

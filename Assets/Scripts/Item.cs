@@ -9,6 +9,8 @@ public class Item : MonoBehaviour
     
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
         transform.Translate(Vector3.down * fallSpeed * Time.deltaTime); 
     }
 
@@ -18,10 +20,7 @@ public class Item : MonoBehaviour
         {
             
             PlayerController player = collision.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                player.LevelUp();
-            }
+            Debug.Log("Item collected by player");
 
             gameObject.SetActive(false);
         }
