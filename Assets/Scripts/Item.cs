@@ -23,14 +23,12 @@ public class Item : MonoBehaviour
                 player.LevelUp();
             }
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
     void OnBecameInvisible()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
-
-
 }

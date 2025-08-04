@@ -21,13 +21,13 @@ public class EnemyBulletController : MonoBehaviour
             {
                 player.TakeDamage(enemyBulletDamage);
             }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
 
     void OnBecameInvisible()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

@@ -7,10 +7,10 @@ public class Enemy : MonoBehaviour
     public float enemyHealth;
     private float enemyCurrentHealth;
 
-    [Header("Prefabs")]
-    public GameObject explosionEffectPrefab;
-    public GameObject enemyBulletPrefab;
-    public GameObject[] dropItemPrefab;
+    [Header("Pool Tags")]
+    public string explosionEffectTag = "EnemyExplosion";
+    public string enemyBulletTag = "EnemyBullet";
+    public string dropItemTag = "Item";
 
     [Header("Combat")]
     public float enemyFireDelay = 1f;
@@ -42,21 +42,28 @@ public class Enemy : MonoBehaviour
     private Vector3 moveDestination;
     private Vector3 gizmoTargetPosition;
 
-    void Start()
+
+    void OnEnable()
     {
         enemyCurrentHealth = enemyHealth;
-        mainCamera = Camera.main;
+        hasEnteredScreen = false;
+
+        if (mainCamera == null) mainCamera = Camera.main;
         CalculateScreenBounds();
 
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-        if (playerObject != null)
+        if (player == null)
         {
-            player = playerObject.transform;
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            if (playerObject != null)
+            {
+                player = playerObject.transform;
+            }
         }
 
         StartCoroutine(AutoFire());
         StartCoroutine(UpdateRandomMovement());
     }
+
 
     void Update()
     {
@@ -87,12 +94,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
     public void Die()
     {
-        GameObject effect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(effect, 2f);
+        GameObject effect = ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
+        StartCoroutine(DisableAfterTime(effect, 2f));
 
-        if (isDropItem && dropItemPrefab != null && dropItemPrefab.Length > 0)
+        if (isDropItem)
         {
             SpawnItem();
         }
@@ -102,7 +110,7 @@ public class Enemy : MonoBehaviour
             spawnManager.OnEnemyKilled(transform.position);
         }
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
 
@@ -112,10 +120,61 @@ public class Enemy : MonoBehaviour
         {
             if (Random.Range(0, 100) < 10)
             {
-                Instantiate(dropItemPrefab[0], transform.position, Quaternion.identity);
-
+                ObjectPooler.Instance.SpawnFromPool(dropItemTag, transform.position, Quaternion.identity);
                 spawnManager.NotifyItemDropped();
             }
+        }
+    }
+
+
+    private IEnumerator AutoFire()
+    {
+        yield return new WaitUntil(() => hasEnteredScreen);
+        while (gameObject.activeInHierarchy)
+        {
+            if (player != null)
+            {
+                Vector3 aimPosition = player.position;
+                Vector3 fireDirection = (aimPosition - bulletSpawnPoint.position).normalized;
+                if (fireDirection != Vector3.zero)
+                {
+                    Quaternion fireRotation = Quaternion.LookRotation(Vector3.forward, -fireDirection);
+                    yield return new WaitForSeconds(predictionTime);
+
+                    ObjectPooler.Instance.SpawnFromPool(enemyBulletTag, bulletSpawnPoint.position, fireRotation);
+                }
+
+                float remainingWaitTime = enemyFireDelay - predictionTime;
+                if (remainingWaitTime > 0)
+                {
+                    yield return new WaitForSeconds(remainingWaitTime);
+                }
+            }
+            else
+            {
+                yield return new WaitForSeconds(1f);
+            }
+        }
+    }
+
+
+    private IEnumerator DisableAfterTime(GameObject obj, float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (obj != null)
+        {
+            obj.SetActive(false);
+        }
+    }
+
+
+    public void TakeDamage(float damage)
+    {
+        enemyCurrentHealth -= damage;
+        Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);
+        if (enemyCurrentHealth <= 0)
+        {
+            Die();
         }
     }
 
@@ -140,11 +199,12 @@ public class Enemy : MonoBehaviour
         return avoidanceVector.normalized;
     }
 
+
     private IEnumerator UpdateRandomMovement()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
         moveDestination = transform.position;
-        while (true)
+        while (gameObject.activeInHierarchy)
         {
             float randomX = Random.Range(-screenBounds.x + screenBoundsPadding, screenBounds.x - screenBoundsPadding);
             float randomY = Random.Range(0, screenBounds.y - screenBoundsPadding);
@@ -153,6 +213,7 @@ public class Enemy : MonoBehaviour
             yield return new WaitForSeconds(waitTime);
         }
     }
+
 
     void MoveToEnterScreen()
     {
@@ -165,6 +226,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
     bool IsWithinScreenBounds()
     {
         Vector3 pos = transform.position;
@@ -174,52 +236,12 @@ public class Enemy : MonoBehaviour
                pos.y <= screenBounds.y - screenBoundsPadding;
     }
 
+
     void CalculateScreenBounds()
     {
         if (mainCamera == null) return;
         float distance = Vector3.Distance(transform.position, mainCamera.transform.position);
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, distance));
-    }
-
-    public void TakeDamage(float damage)
-    {
-        enemyCurrentHealth -= damage;
-        Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);
-        if (enemyCurrentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-    private IEnumerator AutoFire()
-    {
-        yield return new WaitUntil(() => hasEnteredScreen);
-        while (true)
-        {
-            if (player != null)
-            {
-                Vector3 aimPosition = player.position;
-                Vector3 fireDirection = (aimPosition - bulletSpawnPoint.position).normalized;
-                if (fireDirection != Vector3.zero)
-                {
-                    Quaternion fireRotation = Quaternion.LookRotation(Vector3.forward, -fireDirection);
-                    yield return new WaitForSeconds(predictionTime);
-                    if (enemyBulletPrefab != null && bulletSpawnPoint != null)
-                    {
-                        Instantiate(enemyBulletPrefab, bulletSpawnPoint.position, fireRotation);
-                    }
-                }
-                float remainingWaitTime = enemyFireDelay - predictionTime;
-                if (remainingWaitTime > 0)
-                {
-                    yield return new WaitForSeconds(remainingWaitTime);
-                }
-            }
-            else
-            {
-                yield return new WaitForSeconds(1f);
-            }
-        }
     }
 
 
