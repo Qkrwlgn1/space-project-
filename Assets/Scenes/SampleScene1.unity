@@ -136,6 +136,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1134046705}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: baseDamage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: statusBars
       value: 
       objectReference: {fileID: 2120816568}
@@ -145,7 +149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: playerHealth
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: invincibleTime
