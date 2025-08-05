@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyBulletController : MonoBehaviour
 {
     public float enemyBulletSpeed;
-    public int enemyBulletDamage;
+    public float enemyBulletDamage;
 
 
     void Update()
@@ -13,20 +13,17 @@ public class EnemyBulletController : MonoBehaviour
         transform.position += -transform.up * enemyBulletSpeed * Time.deltaTime;
     }
 
-
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             PlayerController player = collision.GetComponent<PlayerController>();
-            if (player != null)
+            if (player != null && !player.isInvincible)
             {
-                player.TakeDamage(enemyBulletDamage);
+                gameObject.SetActive(false);
             }
-            gameObject.SetActive(false);
         }
     }
-
 
     void OnBecameInvisible()
     {

@@ -140,6 +140,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2120816568}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: isInvincible
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: playerHealth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: invincibleTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: sta.Array.size
       value: 5
       objectReference: {fileID: 0}
@@ -171,9 +183,33 @@ PrefabInstance:
       propertyPath: playerBulletDamage
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1267775638094428201, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280346478790367782, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1710451139429137331, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1899492189418636134, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2770656274401317240, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3746220097298854420, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3746220097298854420, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3746220097298854423, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -214,6 +250,22 @@ PrefabInstance:
     - target: {fileID: 3746220097298854423, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4564948706481381307, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4848986612088864601, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6528526596768686623, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124933257987279481, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1523,11 +1575,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGameStarted: 0
   isLive: 1
+  stageloadIndex: 0
   playerObject: {fileID: 1559588223}
   enemySpawnObject: {fileID: 890979125}
   startButtonUI: {fileID: 360864169}
   hp_Gauge: {fileID: 1134046703}
-  currentStage: 1
   backgroundObject: {fileID: 9040376245408319601}
   stagePrefabs:
   - {fileID: 2403253048031043782, guid: 244b49d158b943349b256f24c1744147, type: 3}
@@ -3439,7 +3491,7 @@ MonoBehaviour:
     size: 2
   - tag: PlayerBullet
     prefab: {fileID: 1860706049015914, guid: 0b0c27137eb4d504096874b80ace66bd, type: 3}
-    size: 100
+    size: 40
   - tag: Enemy1
     prefab: {fileID: 1493619720853737233, guid: 7102eeb17d1f00d428acfec3df3cea93, type: 3}
     size: 10
@@ -3460,7 +3512,7 @@ MonoBehaviour:
     size: 10
   - tag: EnemyBullet
     prefab: {fileID: 6798610446988078174, guid: 3412d185171bcd649a794764e65e0d2d, type: 3}
-    size: 100
+    size: 20
 --- !u!4 &1835739718
 Transform:
   m_ObjectHideFlags: 0

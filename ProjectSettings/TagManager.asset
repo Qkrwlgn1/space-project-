@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - FxTemporaire
   - GameManager
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX
@@ -18,9 +19,9 @@ TagManager:
   - UI
   - 
   - Enemy
-  - 
-  - 
-  - 
+  - Player
+  - InvinciblePlayer
+  - EnemyBullet
   - 
   - 
   - 

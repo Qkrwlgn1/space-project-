@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public bool isGameStarted;
     public bool isLive;
+    public int stageloadIndex;
 
     [Header("Game Objects")]
     public GameObject playerObject;
@@ -16,7 +17,6 @@ public class GameManager : MonoBehaviour
 
 
     [Header("Stage Management")]
-    public int currentStage = 1;
     public GameObject backgroundObject;
     public GameObject[] stagePrefabs;
     private GameObject currentStageObject;
@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
             StartGame();
             enabled = false;
         }
+
     }
 
 
@@ -60,7 +61,6 @@ public class GameManager : MonoBehaviour
             Destroy(backgroundObject);
 
 
-            int stageloadIndex = 1;
             stageloadIndex = enemySpawn.currentStage;
 
             LoadStage(stageloadIndex);
@@ -82,8 +82,8 @@ public class GameManager : MonoBehaviour
 
     public void NextStage()
     {
-        currentStage++;
-        LoadStage(currentStage);
+        stageloadIndex++;
+        LoadStage(stageloadIndex);
     }
 
     public void Stop()

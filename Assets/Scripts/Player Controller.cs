@@ -28,6 +28,12 @@ public class PlayerController : MonoBehaviour
     public float playerHealth;
     public float level = 1;
     public float baseDamage;
+    private float playerCurrentHealth;
+    public float invincibleTime;
+    public bool isInvincible = false;
+    private int playerLayer;
+    private int invincibleLayer;
+    public float blinkInterval = 0.1f;
 
     [Header("Fire Delay Settings")]
     public float bulletFireDelay;
@@ -37,19 +43,22 @@ public class PlayerController : MonoBehaviour
     [Header("Screen Bounds")]
     public float screenPadding;
 
-    private float playerCurrentHealth;
     private Camera mainCamera;
     private Vector2 screenBounds;
     private Movement2D movement2D;
+    private SpriteRenderer[] spriteRen;
 
     void Awake()
     {
         movement2D = GetComponent<Movement2D>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
+        spriteRen = GetComponentsInChildren<SpriteRenderer>();
     }
 
     void Start()
     {
+        playerLayer = LayerMask.NameToLayer("Player");
+        invincibleLayer = LayerMask.NameToLayer("InvinciblePlayer");
         playerCurrentHealth = playerHealth;
         StartCoroutine(AutoFireBullet());
 
@@ -105,6 +114,7 @@ public class PlayerController : MonoBehaviour
     {
         playerCurrentHealth -= damage;
         uIHPgauge.UpdateGauge(playerCurrentHealth);
+        StartCoroutine(Invincible());
         if (playerCurrentHealth <= 0)
         {
             Die();
@@ -190,6 +200,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        EnemyBulletController enemyBullet = collision.GetComponent<EnemyBulletController>();
         if (collision.CompareTag("Item"))
         {
             if (GameManager.instance != null)
@@ -197,7 +208,57 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(GameManager.instance.ItemSellectBars());
             }
         }
+
+        if (collision.CompareTag("Enemy") && !isInvincible)
+        {
+            TakeDamage(enemyBullet.enemyBulletDamage);
+        }
+        else if (collision.CompareTag("EnemyBullet") && !isInvincible)
+        {
+            TakeDamage(enemyBullet.enemyBulletDamage);
+        }
     }
+
+    public IEnumerator Invincible()
+    {
+        isInvincible = true;
+        gameObject.layer = invincibleLayer;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < invincibleTime)
+        {
+            foreach (SpriteRenderer renderer in spriteRen)
+            {
+                Color color = renderer.color;
+                color.a = 0f;
+                renderer.color = color;
+            }
+
+            yield return new WaitForSeconds(blinkInterval);
+
+            foreach (SpriteRenderer renderer in spriteRen)
+            {
+                Color color = renderer.color;
+                color.a = 1f;
+                renderer.color = color;
+            }
+
+            yield return new WaitForSeconds(blinkInterval);
+
+            elapsedTime += blinkInterval * 2;
+        }
+
+        foreach (SpriteRenderer renderer in spriteRen)
+            {
+                Color color = renderer.color;
+                color.a = 1f;
+                renderer.color = color;
+            }
+
+        gameObject.layer = playerLayer;
+        isInvincible = false;
+    }
+
 
     public void Next()
     {
