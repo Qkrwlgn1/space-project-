@@ -10,6 +10,4 @@ public class UIHPgauge : MonoBehaviour
     {
         this.slider.value = amount;
     }
-
-
 }

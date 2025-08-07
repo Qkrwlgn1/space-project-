@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
 
     [Header("Stage Management")]
-    public GameObject backgroundObject;
+    public GameObject[] backgroundObject;
     public GameObject[] stagePrefabs;
     private GameObject currentStageObject;
 
@@ -35,17 +35,15 @@ public class GameManager : MonoBehaviour
         playerObject.SetActive(false);
         enemySpawnObject.SetActive(false);
         hp_Gauge.SetActive(false);
-        backgroundObject.SetActive(true);
     }
 
     void Update()
     {
-        if (Input.anyKey)
+        if (Input.GetKeyDown(KeyCode.Return))
         {
             StartGame();
             enabled = false;
         }
-
     }
 
 
@@ -58,7 +56,10 @@ public class GameManager : MonoBehaviour
             enemySpawnObject.SetActive(true);
             hp_Gauge.SetActive(true);
             startButtonUI.SetActive(false);
-            Destroy(backgroundObject);
+            foreach (GameObject obj in backgroundObject)
+            {
+                obj.SetActive(false);
+            }
 
 
             stageloadIndex = enemySpawn.currentStage;
