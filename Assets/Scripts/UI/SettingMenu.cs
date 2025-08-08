@@ -1,16 +1,44 @@
 using UnityEngine;
-
+using UnityEngine.Audio;
 public class SettingMenu : MonoBehaviour
 {
-    public GameObject _desc;
+    public GameObject[] _menu;
 
-    public void SetActiveDesc()
+    public AudioMixer audioMixer;
+
+    public void SetVolume(float volume)
     {
-        _desc.SetActive(true);
+        audioMixer.SetFloat("volume", volume);
     }
-    public void DisActiveDesc()
+
+    public void SetFullScreen(bool isFull)
     {
-        _desc.SetActive(false);
+        Screen.fullScreen = isFull;
+    }
+
+    public void SetActiveMenu(string name)
+    { 
+        switch (name)
+            {
+                case "Desc":
+                    _menu[0].SetActive(true);
+                    break;
+                case "Setting":
+                    _menu[1].SetActive(true);
+                    break;
+            }
+    }
+    public void DisActiveMenu(string name)
+    {
+        switch (name)
+            {
+                case "Desc":
+                    _menu[0].SetActive(false);
+                    break;
+                case "Setting":
+                    _menu[1].SetActive(false);
+                    break;
+            }
     }
 
 }
