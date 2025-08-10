@@ -2161,7 +2161,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 890979125}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a70c820181e41743be79756304fda36, type: 3}
   m_Name: 
@@ -3460,6 +3460,15 @@ MonoBehaviour:
     size: 10
   - tag: EnemyBullet
     prefab: {fileID: 6798610446988078174, guid: 3412d185171bcd649a794764e65e0d2d, type: 3}
+    size: 100
+  - tag: BossExplosion
+    prefab: {fileID: 725748389856807714, guid: bad7a80af8de6a6448fc3187d2d3633f, type: 3}
+    size: 1
+  - tag: BossBullet
+    prefab: {fileID: 2508814619514582746, guid: ae98dba45c096f84586875802cc273d1, type: 3}
+    size: 50
+  - tag: BossBulletPattern2
+    prefab: {fileID: 6798610446988078174, guid: 9e446dad8c446a1469ba1ccdd7c9fd03, type: 3}
     size: 100
 --- !u!4 &1835739718
 Transform:
@@ -4908,7 +4917,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9040376245408319601}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c2af7e6fa5e58a478539552938996d9, type: 3}
   m_Name: 

@@ -36,15 +36,15 @@ public class Enemy : MonoBehaviour
 
     private Camera mainCamera;
     private Vector3 screenBounds;
-    private bool hasEnteredScreen = false;
+    protected bool hasEnteredScreen = false;
 
-    private Transform player;
+    protected Transform player;
     private Vector3 moveDestination;
     private Vector3 gizmoTargetPosition;
 
-    private bool isDead = false;
+    protected bool isDead = false;
 
-    void OnEnable()
+    public virtual void OnEnable()
     {
         enemyCurrentHealth = enemyHealth;
         hasEnteredScreen = false;
@@ -110,7 +110,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Die()
+    public virtual void Die()
     {
         if (isDead) return;
         isDead = true;
@@ -143,7 +143,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator AutoFire()
+    public virtual IEnumerator AutoFire()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
         while (gameObject.activeInHierarchy)
@@ -202,7 +202,7 @@ public class Enemy : MonoBehaviour
         return avoidanceVector.normalized;
     }
 
-    private IEnumerator UpdateRandomMovement()
+    public virtual IEnumerator UpdateRandomMovement()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
         moveDestination = transform.position;
