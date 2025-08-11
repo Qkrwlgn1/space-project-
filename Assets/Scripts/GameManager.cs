@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-
+using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public EnemySpawnManager enemySpawn;
 
     public PlayerController playerCon;
+    public SettingMenu settingMenu;
     [SerializeField] private GameObject itemBack;
     [SerializeField] private GameObject statusBars;
 
@@ -51,6 +52,7 @@ public class GameManager : MonoBehaviour
     {
         if (!isGameStarted)
         {
+            settingMenu.scoreText.gameObject.SetActive(true);
             isGameStarted = true;
             playerObject.SetActive(true);
             enemySpawnObject.SetActive(true);

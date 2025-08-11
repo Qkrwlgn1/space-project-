@@ -1,10 +1,18 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
+using TMPro;
 public class SettingMenu : MonoBehaviour
 {
-    public GameObject[] _menu;
+    [Header("Score")]
+    public static float currentScore = 0;
+    public float scorePerSecond = 10;
+    public TextMeshProUGUI scoreText;
 
+    [Header("Menu")]
+    public GameObject[] _menu;
     public AudioMixer audioMixer;
+
 
     private void Update()
     {
@@ -12,6 +20,30 @@ public class SettingMenu : MonoBehaviour
         {
             SetActiveMenu("EscMenu");
         }
+    }
+
+    void Start()
+    {
+        scoreText.gameObject.SetActive(false);
+        UpdateScoreText();
+    }
+    
+
+    void FixedUpdate()
+    {
+        if (GameManager.instance.isGameStarted)
+        {
+            AddScore(scorePerSecond);
+        }
+    }
+    public void AddScore(float point)
+    {
+        currentScore += point * Time.deltaTime;
+        UpdateScoreText();
+    }
+    void UpdateScoreText()
+    {
+        scoreText.text = "Score : " + Mathf.FloorToInt(currentScore);
     }
 
     public void SetVolume(float volume)
