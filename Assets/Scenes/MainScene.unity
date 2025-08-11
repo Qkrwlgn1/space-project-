@@ -9278,6 +9278,15 @@ MonoBehaviour:
   - tag: EnemyBullet
     prefab: {fileID: 6798610446988078174, guid: 3412d185171bcd649a794764e65e0d2d, type: 3}
     size: 20
+  - tag: BossExplosion
+    prefab: {fileID: 6798610446988078174, guid: 3412d185171bcd649a794764e65e0d2d, type: 3}
+    size: 20
+  - tag: BossBullet
+    prefab: {fileID: 2508814619514582746, guid: ae98dba45c096f84586875802cc273d1, type: 3}
+    size: 20
+  - tag: BossBulletPattern2
+    prefab: {fileID: 6798610446988078174, guid: 9e446dad8c446a1469ba1ccdd7c9fd03, type: 3}
+    size: 50
 --- !u!4 &1835739718
 Transform:
   m_ObjectHideFlags: 0
