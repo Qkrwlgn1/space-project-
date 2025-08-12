@@ -25,10 +25,10 @@ public class PlayerController : MonoBehaviour
     public UIHPgauge uIHPgauge;
 
     [Header("Stats")]
-    public float playerHealth;
+    public float playerHealth = 10;
     public float level = 1;
     public float baseDamage;
-    private float playerCurrentHealth;
+    public float playerCurrentHealth;
     public float invincibleTime;
     public bool isInvincible = false;
     private int playerLayer;
@@ -249,11 +249,11 @@ public class PlayerController : MonoBehaviour
         }
 
         foreach (SpriteRenderer renderer in spriteRen)
-            {
-                Color color = renderer.color;
-                color.a = 1f;
-                renderer.color = color;
-            }
+        {
+            Color color = renderer.color;
+            color.a = 1f;
+            renderer.color = color;
+        }
 
         gameObject.layer = playerLayer;
         isInvincible = false;

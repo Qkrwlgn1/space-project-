@@ -5,7 +5,7 @@ using TMPro;
 public class SettingMenu : MonoBehaviour
 {
     [Header("Score")]
-    public static float currentScore = 0;
+    public static float currentScore;
     public float scorePerSecond = 10;
     public TextMeshProUGUI scoreText;
 
@@ -27,7 +27,7 @@ public class SettingMenu : MonoBehaviour
         scoreText.gameObject.SetActive(false);
         UpdateScoreText();
     }
-    
+
 
     void FixedUpdate()
     {
@@ -96,7 +96,6 @@ public class SettingMenu : MonoBehaviour
                 break;
         }
 
-        
     }
     public void DisActiveMenu(string name)
     {
@@ -129,5 +128,10 @@ public class SettingMenu : MonoBehaviour
                 GameManager.instance.Resume();
                 break;
         }
+    }
+
+    public void GameOverMotion()
+    {
+        _menu[3].SetActive(true);
     }
 }
