@@ -25,6 +25,7 @@ public class SettingMenu : MonoBehaviour
     void Start()
     {
         scoreText.gameObject.SetActive(false);
+        currentScore = 0f;
         UpdateScoreText();
     }
 

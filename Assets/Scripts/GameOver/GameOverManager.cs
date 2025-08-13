@@ -1,8 +1,26 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using TMPro;
 public class GameOverManager : MonoBehaviour
 {
+    public GameObject[] _gameOverScene;
+    private float[] deLay = {1f, 1f, 1f, 0.05f, 1f};
+    public TextMeshProUGUI scoreText;
+    private float score;
+
+    private int index;
+
+    void Start()
+    {
+        StartCoroutine(GameOverAction());
+        score = SettingMenu.currentScore;
+    }
+
+    private void FinalScore()
+    {
+        scoreText.text = "Final Score : " + Mathf.FloorToInt(score);
+    }
     public void ExitGame()
     {
         StartCoroutine(GoToExitGame(1f));
@@ -18,11 +36,20 @@ public class GameOverManager : MonoBehaviour
 
         Application.Quit();
     }
-    
+
     IEnumerator GoToTitle(float time)
     {
         yield return new WaitForSeconds(time);
 
         SceneManager.LoadScene("MainScene");
+    }
+    
+    public IEnumerator GameOverAction()
+    {
+        for (index = 0; index < 5; index++)
+        {
+            yield return new WaitForSeconds(deLay[index]);
+            _gameOverScene[index].SetActive(true);
+        }
     }
 }
