@@ -143,7 +143,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public virtual IEnumerator AutoFire()
+    protected virtual IEnumerator AutoFire()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
         while (gameObject.activeInHierarchy)
