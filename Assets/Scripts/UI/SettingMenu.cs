@@ -2,10 +2,13 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
+using System.Collections;
 public class SettingMenu : MonoBehaviour
 {
     [Header("Score")]
     public static float currentScore;
+    public static float finalScore;
     public float scorePerSecond = 10;
     public TextMeshProUGUI scoreText;
 
@@ -95,6 +98,10 @@ public class SettingMenu : MonoBehaviour
             case "ExitGame":
                 Application.Quit();
                 break;
+            case "Title":
+                _menu[4].SetActive(true);
+                StartCoroutine(GoTitle());
+                break;
         }
 
     }
@@ -134,5 +141,12 @@ public class SettingMenu : MonoBehaviour
     public void GameOverMotion()
     {
         _menu[3].SetActive(true);
+    }
+
+    public IEnumerator GoTitle()
+    {
+        yield return new WaitForSecondsRealtime(2.5f);
+        SceneManager.LoadScene("Loading");
+        GameManager.instance.Resume();
     }
 }

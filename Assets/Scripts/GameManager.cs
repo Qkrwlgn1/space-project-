@@ -23,7 +23,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Enternal Scripts")]
     public EnemySpawnManager enemySpawn;
-
     public PlayerController playerCon;
     public SettingMenu settingMenu;
     [SerializeField] private GameObject itemBack;
@@ -36,6 +35,8 @@ public class GameManager : MonoBehaviour
         playerObject.SetActive(false);
         enemySpawnObject.SetActive(false);
         hp_Gauge.SetActive(false);
+
+        settingMenu._menu[4].SetActive(false);
     }
 
     void Update()

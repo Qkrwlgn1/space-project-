@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
 {
+
     [Header("Pool Tags")]
     public string enemyTag1 = "Enemy1";
     public string enemyTag2 = "Enemy2";
@@ -92,6 +93,7 @@ public class EnemySpawnManager : MonoBehaviour
                 ObjectPooler.Instance.SpawnFromPool(guaranteedItemTag, deadEnemyPosition, Quaternion.identity);
             }
             StartCoroutine(NextStageRoutine());
+            
         }
     }
 
