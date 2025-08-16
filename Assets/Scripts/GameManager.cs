@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -15,15 +16,13 @@ public class GameManager : MonoBehaviour
     public GameObject startButtonUI;
     public GameObject hp_Gauge;
 
-
     [Header("Stage Management")]
     public GameObject[] backgroundObject;
     public GameObject[] stagePrefabs;
     private GameObject currentStageObject;
 
-    [Header("Enternal Scripts")]
+    [Header("External Scripts")]
     public EnemySpawnManager enemySpawn;
-
     public PlayerController playerCon;
     public SettingMenu settingMenu;
     [SerializeField] private GameObject itemBack;
@@ -33,6 +32,7 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         isGameStarted = false;
+        isLive = true;
         playerObject.SetActive(false);
         enemySpawnObject.SetActive(false);
         hp_Gauge.SetActive(false);
@@ -40,19 +40,38 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && !isGameStarted)
         {
             StartGame();
-            enabled = false;
         }
     }
 
+    public IEnumerator ItemSellectBars()
+    {
+        itemBack.SetActive(true);
+        yield return new WaitForSecondsRealtime(1f); // Time.timeScale 영향 안 받음
 
+        if (playerCon != null) playerCon.Next(); // PlayerController의 Next() 호출
+
+        statusBars.SetActive(true);
+        Stop();
+    }
+
+    public IEnumerator StatusSellectBarsBack()
+    {
+        itemBack.SetActive(false);
+        statusBars.SetActive(false);
+        Resume();
+        yield return null;
+    }
+
+    #region 기존 함수들 (수정 없음)
     public void StartGame()
     {
         if (!isGameStarted)
         {
-            settingMenu.scoreText.gameObject.SetActive(true);
+            if (settingMenu != null && settingMenu.scoreText != null)
+                settingMenu.scoreText.gameObject.SetActive(true);
             isGameStarted = true;
             playerObject.SetActive(true);
             enemySpawnObject.SetActive(true);
@@ -62,14 +81,10 @@ public class GameManager : MonoBehaviour
             {
                 obj.SetActive(false);
             }
-
-
             stageloadIndex = enemySpawn.currentStage;
-
             LoadStage(stageloadIndex);
         }
     }
-
     private void LoadStage(int stageIndex)
     {
         if (currentStageObject != null)
@@ -82,43 +97,20 @@ public class GameManager : MonoBehaviour
             currentStageObject.transform.position = new Vector3(-2.8f, -0.5f, 0);
         }
     }
-
     public void NextStage()
     {
         stageloadIndex++;
         LoadStage(stageloadIndex);
     }
-
     public void Stop()
     {
         isLive = false;
-        Time.timeScale = 0;
+        Time.timeScale = 1;
     }
-
     public void Resume()
     {
         isLive = true;
         Time.timeScale = 1;
     }
-
-    public IEnumerator ItemSellectBars()
-    {
-
-        itemBack.SetActive(true);
-
-        yield return new WaitForSeconds(1f);
-
-        playerCon.Next();
-        statusBars.SetActive(true);
-
-        Stop();
-    }
-
-    public IEnumerator StatusSellectBarsBack()
-    {
-        itemBack.SetActive(false);
-        statusBars.SetActive(false);
-        Resume();
-        yield return new WaitForSeconds(0f);
-    }
+    #endregion
 }
