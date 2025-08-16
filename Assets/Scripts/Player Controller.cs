@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public Transform[] bulletSpawnPointLv2;
     public Transform[] bulletSpawnPointLv3;
     public EnemySpawnManager enemySpawnManager;
-    public UIHPgauge uIHPgauge;
+    [SerializeField] private UIHPgauge uIHPgauge;
 
     [Header("Stats")]
     public float playerHealth = 10;

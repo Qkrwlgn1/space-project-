@@ -10,13 +10,13 @@ public class Boss : Enemy
     [SerializeField] private int whipShotDamage = 8;
 
     [Header("Boss Patterns")]
-    [SerializeField] private float patternInterval = 3f; //ÆÐÅÏ »çÀÌ ´ë±â½Ã°£ ¼³Á¤
+    [SerializeField] private float patternInterval = 3f; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     [Header("Pattern 2 Options")]
-    [SerializeField] private int circleShotWaveCount = 3; // ¸î¹ø ¹ß»çÇÒÁö
-    [SerializeField] private int circleShotBulletCount = 20; // ¸î¹ß ¹ß»çÇÒÁö
-    [SerializeField] private float circleShotWaveInterval = 0.5f; // ¹ß»ç °£°Ý
-    [SerializeField] private float circleShot_angleOffset = 30f; //È¸Àü°¢µµ
+    [SerializeField] private int circleShotWaveCount = 3; // ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private int circleShotBulletCount = 20; // ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private float circleShotWaveInterval = 0.5f; // ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private float circleShot_angleOffset = 30f; //È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     [SerializeField] private string circleShot_bulletTag = "BossBulletPattern2";
 
@@ -61,7 +61,7 @@ public class Boss : Enemy
         }
     }
 
-    //1¹øÂ° ÆÐÅÏ
+    //1ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½
     private IEnumerator BurstFirePattern()
     {
         if (player == null) yield break;
@@ -80,7 +80,7 @@ public class Boss : Enemy
         }
     }
 
-    //2¹øÂ° ÆÐÅÏ
+    //2ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½
     private IEnumerator CircleShotPattern()
     {
         float currentAngleOffset = 0f;
@@ -107,7 +107,7 @@ public class Boss : Enemy
         yield return null;
     }
 
-    //3¹øÂ° ÆÐÅÏ
+    //3ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½
     private IEnumerator WhipShotPattern()
     {
         int bulletCount = 15;

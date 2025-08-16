@@ -8,7 +8,6 @@ public class GameOverManager : MonoBehaviour
     private float[] deLay = {1f, 1f, 1f, 0.05f, 1f};
     public TextMeshProUGUI scoreText;
     private float score;
-
     private int index;
 
     void Start()

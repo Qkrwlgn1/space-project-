@@ -1,17 +1,20 @@
 using System.Collections;
 using UnityEngine;
 
+public enum EnemyType {Enemy_1, Enemy_2, Enemy_3, Boss}
 public class Enemy : MonoBehaviour
 {
+
     [Header("Enemy Stats")]
     public float enemyHealth;
-    private float enemyCurrentHealth;
+    public float enemyCurrentHealth;
 
     [Header("Pool Tags")]
     public string explosionEffectTag = "EnemyExplosion";
     public string enemyBulletTag = "EnemyBullet";
     public string dropItemTag = "Item";
-
+    public EnemyType enemyType;
+    
     [Header("Combat")]
     public float enemyFireDelay = 1f;
     public float predictionTime = 0.5f;
@@ -106,6 +109,7 @@ public class Enemy : MonoBehaviour
         Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);
         if (enemyCurrentHealth <= 0)
         {
+            EnemyDieScore(enemyType);
             Die();
         }
     }
@@ -241,5 +245,25 @@ public class Enemy : MonoBehaviour
         if (mainCamera == null) return;
         float distance = Vector3.Distance(transform.position, mainCamera.transform.position);
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, distance));
+    }
+
+    private void EnemyDieScore(EnemyType type)
+    {
+        switch (type)
+        {
+            case EnemyType.Enemy_1:
+                SettingMenu.currentScore += 50;
+                break;
+            case EnemyType.Enemy_2:
+                SettingMenu.currentScore += 150;
+                break;
+            case EnemyType.Enemy_3:
+                SettingMenu.currentScore += 300;
+                break;
+            case EnemyType.Boss:
+                SettingMenu.currentScore += 1000;
+                Boss_HPgauge.isBossAlive = false;
+                break;
+        }
     }
 }

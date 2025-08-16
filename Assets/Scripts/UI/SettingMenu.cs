@@ -9,7 +9,7 @@ public class SettingMenu : MonoBehaviour
     [Header("Score")]
     public static float currentScore;
     public static float finalScore;
-    public float scorePerSecond = 10;
+    public float scorePerSecond = 1;
     public TextMeshProUGUI scoreText;
 
     [Header("Menu")]

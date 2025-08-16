@@ -68,6 +68,7 @@ public class EnemySpawnManager : MonoBehaviour
             bool isBossTurn = (currentStage % 5 == 0) && (enemySpawnedThisStage == enemyToSpawnThisStage - 1);
             if (isBossTurn)
             {
+                Boss_HPgauge.isBossAlive = true;
                 SpawnBoss();
             }
             else
@@ -196,7 +197,7 @@ public class EnemySpawnManager : MonoBehaviour
     }
 
 
-    private IEnumerator NextStageRoutine()
+    public IEnumerator NextStageRoutine()
     {
         yield return new WaitForSeconds(stageClearDelay);
         currentStage++;

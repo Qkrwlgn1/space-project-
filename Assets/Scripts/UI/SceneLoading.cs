@@ -18,10 +18,10 @@ public class SceneLoading : MonoBehaviour
         loadOperation.allowSceneActivation = false;
         sceneCount++;
 
-        StartCoroutine(Loading());
+        StartCoroutine(GameLoading());
     }
 
-    IEnumerator Loading()
+    IEnumerator GameLoading()
     {
         yield return new WaitForSeconds(1f);
 
