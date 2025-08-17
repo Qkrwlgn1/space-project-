@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Stage Management")]
     public GameObject[] backgroundObject;
-    public GameObject[] stagePrefabs;
     private GameObject currentStageObject;
 
     [Header("Enternal Scripts")]
@@ -28,15 +27,24 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject itemBack;
     [SerializeField] private GameObject statusBars;
 
+    [Header("PoolsTag")]
+    public string StageTag_1 = "StageBG_1";
+    public string StageTag_2 = "StageBG_2";
+    public string StageTag_3 = "StageBG_3";
+
     void Awake()
     {
         instance = this;
         isGameStarted = false;
+    }
+
+    void Start()
+    {
+        AudioManagerScript.Instance.PlayBgm(0);
+        settingMenu._menu[4].SetActive(false);
         playerObject.SetActive(false);
         enemySpawnObject.SetActive(false);
         hp_Gauge.SetActive(false);
-
-        settingMenu._menu[4].SetActive(false);
     }
 
     void Update()
@@ -47,7 +55,6 @@ public class GameManager : MonoBehaviour
             enabled = false;
         }
     }
-
 
     public void StartGame()
     {
@@ -65,29 +72,47 @@ public class GameManager : MonoBehaviour
             }
 
 
-            stageloadIndex = enemySpawn.currentStage;
-
-            LoadStage(stageloadIndex);
+            LoadStage(enemySpawn.currentStage);
         }
     }
 
-    private void LoadStage(int stageIndex)
+    public void LoadStage(int stageIndex)
     {
         if (currentStageObject != null)
         {
-            Destroy(currentStageObject);
+            currentStageObject.SetActive(false);
         }
-        if (stageIndex > 0 && stageIndex <= stagePrefabs.Length)
-        {
-            currentStageObject = Instantiate(stagePrefabs[stageIndex - 1]);
-            currentStageObject.transform.position = new Vector3(-2.8f, -0.5f, 0);
-        }
-    }
 
-    public void NextStage()
-    {
-        stageloadIndex++;
-        LoadStage(stageloadIndex);
+        if (stageIndex > 0 && stageIndex < 4)
+        {
+            currentStageObject = ObjectPooler.Instance.SpawnFromPool(StageTag_1, new Vector3(-2.8f, -0.5f, 0), Quaternion.identity);
+            AudioManagerScript.Instance.PlayBgm(1);
+            
+        }
+        else if (stageIndex >= 4 && stageIndex < 7)
+        {
+            currentStageObject = ObjectPooler.Instance.SpawnFromPool(StageTag_2, new Vector3(-2.8f, -0.5f, 0), Quaternion.identity);
+            if (stageIndex == 5)
+            {
+                AudioManagerScript.Instance.PlayBgm(6);
+            }
+            else
+            {
+                AudioManagerScript.Instance.PlayBgm(2);
+            }
+        }
+        else if (stageIndex >= 7 && stageIndex < 11)
+        {
+            currentStageObject = ObjectPooler.Instance.SpawnFromPool(StageTag_3, new Vector3(-2.8f, -0.5f, 0), Quaternion.identity);
+            if (stageIndex == 10)
+            {
+                AudioManagerScript.Instance.PlayBgm(6);
+            }
+            else
+            {
+                AudioManagerScript.Instance.PlayBgm(3);
+            }
+        }
     }
 
     public void Stop()
@@ -104,15 +129,15 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator ItemSellectBars()
     {
+        Stop();
 
         itemBack.SetActive(true);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
 
         playerCon.Next();
         statusBars.SetActive(true);
-
-        Stop();
+        
     }
 
     public IEnumerator StatusSellectBarsBack()

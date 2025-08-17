@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
 {
+    public GameManager gameManager;
 
     [Header("Pool Tags")]
     public string enemyTag1 = "Enemy1";
@@ -204,6 +205,7 @@ public class EnemySpawnManager : MonoBehaviour
         if (currentStage <= maxStage)
         {
             StartStage(currentStage);
+            gameManager.LoadStage(currentStage);
         }
     }
 }

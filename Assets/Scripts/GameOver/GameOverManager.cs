@@ -10,10 +10,12 @@ public class GameOverManager : MonoBehaviour
     private float score;
     private int index;
 
+
     void Start()
     {
         StartCoroutine(GameOverAction());
         score = SettingMenu.currentScore;
+        AudioManagerScript.Instance.PlayBgm(5);
     }
 
     private void FinalScore()
@@ -39,8 +41,7 @@ public class GameOverManager : MonoBehaviour
     IEnumerator GoToTitle(float time)
     {
         yield return new WaitForSeconds(time);
-
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("Loading");
     }
     
     public IEnumerator GameOverAction()

@@ -14,7 +14,6 @@ public class SettingMenu : MonoBehaviour
 
     [Header("Menu")]
     public GameObject[] _menu;
-    public AudioMixer audioMixer;
 
 
     private void Update()
@@ -48,11 +47,6 @@ public class SettingMenu : MonoBehaviour
     void UpdateScoreText()
     {
         scoreText.text = "Score : " + Mathf.FloorToInt(currentScore);
-    }
-
-    public void SetVolume(float volume)
-    {
-        audioMixer.SetFloat("volume", volume);
     }
 
     public void SetFullScreen(bool isFull)
