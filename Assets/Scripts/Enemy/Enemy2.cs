@@ -8,7 +8,7 @@ public class Enemy2 : Enemy
     [SerializeField] private float burstInterval = 0.2f;
 
     [Header("Enemy2 Movement")]
-    [SerializeField] private float entrySpeed = 2f; // 진입하는 데 걸리는 시간(초)
+    [SerializeField] private float entrySpeed = 2f;
 
     private bool isEntering;
     private Vector3 entryStartPoint;
@@ -24,17 +24,14 @@ public class Enemy2 : Enemy
 
     private IEnumerator MainBehaviorRoutine()
     {
-        // --- 1. 화면 진입 설정 ---
         isEntering = true;
         entryStartPoint = transform.position;
         entryEndPoint = new Vector3(-entryStartPoint.x * 0.8f, screenBounds.y * 0.7f, 0);
         transform.rotation = Quaternion.Euler(0, 0, transform.position.x > 0 ? -90 : 90);
         entryTimer = 0f;
 
-        // ### 공격 코루틴을 진입 이동과 '동시에' 시작 ###
         StartCoroutine(AutoFire());
 
-        // --- 2. 화면 진입 이동 실행 ---
         while (isEntering)
         {
             float progress = entryTimer / entrySpeed;
@@ -47,7 +44,6 @@ public class Enemy2 : Enemy
             yield return null;
         }
 
-        // --- 3. 일반 랜덤 이동 시작 ---
         StartCoroutine(base.UpdateRandomMovement());
     }
 
@@ -56,7 +52,6 @@ public class Enemy2 : Enemy
         if (GameManager.instance != null && !GameManager.instance.isLive)
             return;
 
-        // 진입이 끝난 후에는 부모의 Update 로직(플레이어 추적 회전 등)을 사용
         if (!isEntering)
         {
             base.Update();
@@ -65,7 +60,6 @@ public class Enemy2 : Enemy
 
     protected override IEnumerator AutoFire()
     {
-        // 이제 진입 여부와 상관없이 바로 발사 로직을 시작할 수 있음
         while (gameObject.activeInHierarchy && !isDead)
         {
             yield return new WaitForSeconds(enemyFireDelay);
@@ -73,7 +67,6 @@ public class Enemy2 : Enemy
 
             for (int i = 0; i < burstCount; i++)
             {
-                // 진입 중에는 기체 정면으로, 진입 후에는 플레이어를 조준하도록 수정
                 Quaternion fireRotation;
                 if (isEntering)
                 {
