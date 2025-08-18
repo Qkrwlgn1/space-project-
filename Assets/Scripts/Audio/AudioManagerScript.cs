@@ -49,6 +49,7 @@ public class AudioManagerScript : MonoBehaviour
     }
     public void AddScore(float point)
     {
+        if (GameManager.instance != null && !GameManager.instance.isLive) return;
         currentScore += point * Time.deltaTime;
         UpdateScoreText();
     }
