@@ -10397,6 +10397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scorePerSecond: 10
   scoreText: {fileID: 57017672}
+  settingMenu: {fileID: 1736913917}
   _menu:
   - {fileID: 304359535}
   - {fileID: 1866853757}
