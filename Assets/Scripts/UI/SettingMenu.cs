@@ -11,6 +11,7 @@ public class SettingMenu : MonoBehaviour
     public static float finalScore;
     public float scorePerSecond = 1;
     public TextMeshProUGUI scoreText;
+    public GameObject settingMenu;
 
     [Header("Menu")]
     public GameObject[] _menu;
@@ -26,6 +27,7 @@ public class SettingMenu : MonoBehaviour
 
     void Start()
     {
+        DontDestroyOnLoad(settingMenu);
         scoreText.gameObject.SetActive(false);
         currentScore = 0f;
         UpdateScoreText();
