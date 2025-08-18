@@ -70,6 +70,7 @@ public class EnemySpawnManager : MonoBehaviour
             if (isBossTurn)
             {
                 Boss_HPgauge.isBossAlive = true;
+                AudioManagerScript.Instance.PlayBgm(6);
                 SpawnBoss();
             }
             else

@@ -56,6 +56,7 @@ public class SettingMenu : MonoBehaviour
 
     public void SetActiveMenu(string name)
     {
+        AudioManagerScript.Instance.PlayUISource();
         switch (name)
         {
             case "Desc":

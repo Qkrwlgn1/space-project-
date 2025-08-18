@@ -252,16 +252,20 @@ public class Enemy : MonoBehaviour
         switch (type)
         {
             case EnemyType.Enemy_1:
+                AudioManagerScript.Instance.EnemySFX(0);
                 SettingMenu.currentScore += 50;
                 break;
             case EnemyType.Enemy_2:
+                AudioManagerScript.Instance.EnemySFX(0);
                 SettingMenu.currentScore += 150;
                 break;
             case EnemyType.Enemy_3:
+                AudioManagerScript.Instance.EnemySFX(0);
                 SettingMenu.currentScore += 300;
                 break;
             case EnemyType.Boss:
                 SettingMenu.currentScore += 1000;
+                AudioManagerScript.Instance.EnemySFX(1);
                 Boss_HPgauge.isBossAlive = false;
                 break;
         }

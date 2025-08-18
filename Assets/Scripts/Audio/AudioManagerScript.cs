@@ -1,13 +1,23 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using System.Collections;
+using System.Collections.Generic;
 public class AudioManagerScript : MonoBehaviour
 {
     public static AudioManagerScript Instance { get; private set; }
     public AudioSource bgmSource;
-    public AudioSource sfxSource;
+    public AudioSource objectPoolSFX;
+    public AudioSource clikeUiSFX;
     public AudioClip[] _audioBgm;
-    public AudioClip[] _audioSfx;
+    public AudioClip[] _audioPlayerSfx;
+    public AudioClip[] _audioEnemySfx;
+    public AudioClip _audioUISfx;
     public AudioMixer audioMixer;
+    public GameObject obj;
+    private Queue<AudioSource> audioPool = new Queue<AudioSource>();
+    private int poolSize = 5;
+    private bool isBulletPlaying = false;
+
     void Awake()
     {
         if (Instance == null)
@@ -18,6 +28,18 @@ public class AudioManagerScript : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    void Start()
+    {
+        for (int i = 0; i < poolSize; i++)
+        {
+            obj.transform.SetParent(this.transform);
+            AudioSource source = obj.AddComponent<AudioSource>();
+            source.spatialBlend = 0f;
+            source.playOnAwake = false;
+            audioPool.Enqueue(source);
         }
     }
 
@@ -55,7 +77,50 @@ public class AudioManagerScript : MonoBehaviour
             case 3:
                 PlayBGMController(_audioBgm[3]);
                 break;
+            case 4:
+                PlayBGMController(_audioBgm[4]);
+                break;
+            case 5:
+                PlayBGMController(_audioBgm[5]);
+                break;
+            case 6:
+                PlayBGMController(_audioBgm[6]);
+                break;
         }
+    }
+
+    public void EnemySFX(int type)
+    {
+        switch (type)
+        {
+            case 0:
+                PlaySFX(_audioEnemySfx[0]);
+                break;
+            case 1:
+                PlaySFX(_audioEnemySfx[1]);
+                break;
+        }
+    }
+
+    public void PlayerSFX(int type)
+    {
+        switch (type)
+        {
+            case 0:
+                PlaySFX(_audioPlayerSfx[0]);
+                break;
+            case 1:
+                PlaySFX(_audioPlayerSfx[1]);
+                break;
+            case 2:
+                PlayBulletSFX(_audioPlayerSfx[2]);
+                break;
+        }
+    }
+
+    public void PlayUISource()
+    {
+        clikeUiSFX.PlayOneShot(_audioUISfx);
     }
 
     private void PlayBGMController(AudioClip newClip)
@@ -66,5 +131,48 @@ public class AudioManagerScript : MonoBehaviour
         bgmSource.clip = newClip;
         bgmSource.loop = true;
         bgmSource.Play();
+    }
+
+    public void PlaySFX(AudioClip clip)
+    {
+        if (audioPool.Count > 0)
+        {
+            AudioSource source = audioPool.Dequeue();
+            source.clip = clip;
+            source.Play();
+
+            StartCoroutine(ReturnToPool(source, clip.length));
+        }
+    }
+    public void PlayBulletSFX(AudioClip clip)
+    {
+        if (isBulletPlaying) return;
+
+        if (audioPool.Count > 0)
+        {
+            AudioSource source = audioPool.Dequeue();
+            source.clip = clip;
+            source.Play();
+
+            isBulletPlaying = true;
+
+            StartCoroutine(ReturnToBulletPool(source, clip.length));
+        }
+    }
+
+    private IEnumerator ReturnToPool(AudioSource source, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        source.Stop();
+        audioPool.Enqueue(source);
+    }
+
+    private IEnumerator ReturnToBulletPool(AudioSource source, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        source.Stop();
+        audioPool.Enqueue(source);
+
+        isBulletPlaying = false;
     }
 }

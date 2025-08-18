@@ -113,10 +113,12 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(float damage)
     {
         playerCurrentHealth -= damage;
+        AudioManagerScript.Instance.PlayerSFX(0);
         uIHPgauge.UpdateGauge(playerCurrentHealth);
         StartCoroutine(Invincible());
         if (playerCurrentHealth <= 0)
         {
+            AudioManagerScript.Instance.PlayerSFX(1);
             Die();
         }
     }
@@ -142,6 +144,7 @@ public class PlayerController : MonoBehaviour
     {
         while (true)
         {
+            AudioManagerScript.Instance.PlayerSFX(2);
             if (GameManager.instance != null && !GameManager.instance.isLive)
             {
                 yield return null;
@@ -175,6 +178,7 @@ public class PlayerController : MonoBehaviour
 
     private void FireBullet(Transform spawnPoint)
     {
+        
         if (spawnPoint == null) return;
 
         GameObject bulletObj = ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
