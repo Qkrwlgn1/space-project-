@@ -2,16 +2,18 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
+using System.Collections;
 public class SettingMenu : MonoBehaviour
 {
     [Header("Score")]
-    public static float currentScore = 0;
-    public float scorePerSecond = 10;
+    public static float currentScore;
+    public static float finalScore;
+    public float scorePerSecond = 1;
     public TextMeshProUGUI scoreText;
 
     [Header("Menu")]
     public GameObject[] _menu;
-    public AudioMixer audioMixer;
 
 
     private void Update()
@@ -25,9 +27,10 @@ public class SettingMenu : MonoBehaviour
     void Start()
     {
         scoreText.gameObject.SetActive(false);
+        currentScore = 0f;
         UpdateScoreText();
     }
-    
+
 
     void FixedUpdate()
     {
@@ -46,11 +49,6 @@ public class SettingMenu : MonoBehaviour
         scoreText.text = "Score : " + Mathf.FloorToInt(currentScore);
     }
 
-    public void SetVolume(float volume)
-    {
-        audioMixer.SetFloat("volume", volume);
-    }
-
     public void SetFullScreen(bool isFull)
     {
         Screen.fullScreen = isFull;
@@ -58,6 +56,7 @@ public class SettingMenu : MonoBehaviour
 
     public void SetActiveMenu(string name)
     {
+        AudioManagerScript.Instance.PlayUISource();
         switch (name)
         {
             case "Desc":
@@ -94,9 +93,12 @@ public class SettingMenu : MonoBehaviour
             case "ExitGame":
                 Application.Quit();
                 break;
+            case "Title":
+                _menu[4].SetActive(true);
+                StartCoroutine(GoTitle());
+                break;
         }
 
-        
     }
     public void DisActiveMenu(string name)
     {
@@ -129,5 +131,17 @@ public class SettingMenu : MonoBehaviour
                 GameManager.instance.Resume();
                 break;
         }
+    }
+
+    public void GameOverMotion()
+    {
+        _menu[3].SetActive(true);
+    }
+
+    public IEnumerator GoTitle()
+    {
+        yield return new WaitForSecondsRealtime(2.5f);
+        SceneManager.LoadScene("Loading");
+        GameManager.instance.Resume();
     }
 }

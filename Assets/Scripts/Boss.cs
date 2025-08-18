@@ -10,14 +10,14 @@ public class Boss : Enemy
     [SerializeField] private int whipShotDamage = 8;
 
     [Header("Boss Patterns")]
-    [SerializeField] private float patternInterval = 3f; //ÆÐÅÏ »çÀÌ ´ë±â½Ã°£ ¼³Á¤
+
+    [SerializeField] private float patternInterval = 3f;
 
     [Header("Pattern 2 Options")]
-    [SerializeField] private int circleShotWaveCount = 3; // ¸î¹ø ¹ß»çÇÒÁö
-    [SerializeField] private int circleShotBulletCount = 20; // ¸î¹ß ¹ß»çÇÒÁö
-    [SerializeField] private float circleShotWaveInterval = 0.5f; // ¹ß»ç °£°Ý
-    [SerializeField] private float circleShot_angleOffset = 30f; //È¸Àü°¢µµ
-
+    [SerializeField] private int circleShotWaveCount = 3;
+    [SerializeField] private int circleShotBulletCount = 20;
+    [SerializeField] private float circleShotWaveInterval = 0.5f;
+    [SerializeField] private float circleShot_angleOffset = 30f;
     [SerializeField] private string circleShot_bulletTag = "BossBulletPattern2";
 
     private int lastPatternIndex = -1;
@@ -30,9 +30,57 @@ public class Boss : Enemy
         StartCoroutine(BossPatternRoutine());
     }
 
+    // ### ï¿½ß°ï¿½: ï¿½Î¸ï¿½ï¿½ï¿½ Update ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½á¼­ 'ï¿½Ìµï¿½' ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ###
+    protected override void Update()
+    {
+        if (GameManager.instance != null && !GameManager.instance.isLive)
+            return;
+
+        // ï¿½Ìµï¿½(transform.position += ...) ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½, È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
+        if (player != null)
+        {
+            gizmoTargetPosition = player.position;
+            Vector3 directionToPlayer = (player.position - transform.position).normalized;
+            if (directionToPlayer != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, -directionToPlayer);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
+        }
+
+        // È­ï¿½ï¿½ ï¿½ï¿½è¸¦ ï¿½ï¿½ï¿½î³ªï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+        KeepWithinScreenBounds();
+    }
+
+    // ### ï¿½ß°ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½Ú·ï¿½Æ¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½á¼­ ï¿½Æ¹ï¿½ï¿½Íµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ###
+    protected override IEnumerator UpdateRandomMovement()
+    {
+        // ï¿½Æ¹ï¿½ï¿½Íµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+        yield break;
+    }
+
+    // ### ï¿½ß°ï¿½: ï¿½Î¸ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½á¼­ È­ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ ###
+    protected override void KeepWithinScreenBounds()
+    {
+        Vector3 pos = transform.position;
+        bool needsRepositioning = false;
+
+        if (pos.x < -screenBounds.x + screenBoundsPadding) { pos.x = -screenBounds.x + screenBoundsPadding; needsRepositioning = true; }
+        else if (pos.x > screenBounds.x + screenBoundsPadding) { pos.x = screenBounds.x - screenBoundsPadding; needsRepositioning = true; }
+
+        if (pos.y < -screenBounds.y + screenBoundsPadding) { pos.y = -screenBounds.y + screenBoundsPadding; needsRepositioning = true; }
+        else if (pos.y > screenBounds.y - screenBoundsPadding) { pos.y = screenBounds.y - screenBoundsPadding; needsRepositioning = true; }
+
+        if (needsRepositioning)
+        {
+            transform.position = pos;
+        }
+    }
+
     private IEnumerator BossPatternRoutine()
     {
-        yield return new WaitUntil(() => hasEnteredScreen);
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ hasEnteredScreenï¿½ï¿½ trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        hasEnteredScreen = true;
 
         while (gameObject.activeInHierarchy && !isDead)
         {
@@ -61,7 +109,7 @@ public class Boss : Enemy
         }
     }
 
-    //1¹øÂ° ÆÐÅÏ
+    //1ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½
     private IEnumerator BurstFirePattern()
     {
         if (player == null) yield break;
@@ -80,7 +128,7 @@ public class Boss : Enemy
         }
     }
 
-    //2¹øÂ° ÆÐÅÏ
+    //2ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½
     private IEnumerator CircleShotPattern()
     {
         float currentAngleOffset = 0f;
@@ -107,7 +155,7 @@ public class Boss : Enemy
         yield return null;
     }
 
-    //3¹øÂ° ÆÐÅÏ
+    //3ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½
     private IEnumerator WhipShotPattern()
     {
         int bulletCount = 15;
@@ -125,7 +173,6 @@ public class Boss : Enemy
             yield return new WaitForSeconds(whipInterval);
         }
     }
-
 
     private void FireBulletWithDamage(string bulletTag, int damage, Vector3 position, Quaternion rotation)
     {

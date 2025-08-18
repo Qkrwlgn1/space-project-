@@ -1,13 +1,18 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private Rigidbody2D rigid;
-
-    public static bool isPaused = false;
+    [Header("Component References")]
+    [SerializeField] private Rigidbody2D rigid;
+    public Transform childObject;
+    public Transform bulletSpawnPointLv1;
+    public Transform[] bulletSpawnPointLv2;
+    public Transform[] bulletSpawnPointLv3;
+    public EnemySpawnManager enemySpawnManager;
+    public UIHPgauge uIHPgauge;
 
     [Header("UI Objects")]
     public Status[] sta;
@@ -16,33 +21,38 @@ public class PlayerController : MonoBehaviour
     public string explosionEffectTag = "PlayerExplosion";
     public string bulletTag = "PlayerBullet";
 
-    [Header("Object References")]
-    public Transform childObject;
-    public Transform bulletSpawnPointLv1;
-    public Transform[] bulletSpawnPointLv2;
-    public Transform[] bulletSpawnPointLv3;
-    public EnemySpawnManager enemySpawnManager;
-    public UIHPgauge uIHPgauge;
 
-    [Header("Stats")]
+    [Header("Player Stats")]
     public float playerHealth;
-    public float level = 1;
-    public float baseDamage;
-    private float playerCurrentHealth;
-    public float invincibleTime;
-    public bool isInvincible = false;
-    private int playerLayer;
-    private int invincibleLayer;
-    public float blinkInterval = 0.1f;
+    public int playerDamageLevel = 1;
+    public int playerSpeedLevel = 1;
+    public int playerHPLevel = 1;
+    public int playerDelayLevel = 1;
+    public int playerBulletLevel = 1;
+    public int playerBulletSizeLevel = 1;
+
+    [Header("Upgrade Values")]
+    public float baseDamage = 10f;
+    public float speedIncreasePerLevel = 0.5f;
+    public float healthIncreasePerLevel = 20f;
+    public float sizeIncreasePerLevel = 0.2f;
 
     [Header("Fire Delay Settings")]
-    public float bulletFireDelay;
-    public float fireDelayReduction;
-    public float minFireDelay = 0.01f;
+    public float baseFireDelay = 0.5f;
+    public float fireDelayReduction = 0.05f;
+    public float minFireDelay = 0.1f;
+
+    [Header("Invincible Settings")]
+    public float invincibleTime = 2f;
+    public bool isInvincible = false;
+    public float blinkInterval = 0.1f;
 
     [Header("Screen Bounds")]
     public float screenPadding;
 
+    public float playerCurrentHealth;
+    private int playerLayer;
+    private int invincibleLayer;
     private Camera mainCamera;
     private Vector2 screenBounds;
     private Movement2D movement2D;
@@ -60,16 +70,15 @@ public class PlayerController : MonoBehaviour
         playerLayer = LayerMask.NameToLayer("Player");
         invincibleLayer = LayerMask.NameToLayer("InvinciblePlayer");
         playerCurrentHealth = playerHealth;
+        if (uIHPgauge != null) uIHPgauge.SetMaxHealth(playerHealth);
         StartCoroutine(AutoFireBullet());
-
         mainCamera = Camera.main;
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
     }
 
     void Update()
     {
-        if (GameManager.instance != null && !GameManager.instance.isLive)
-            return;
+        if (GameManager.instance != null && !GameManager.instance.isLive) return;
         Move();
     }
 
@@ -85,109 +94,43 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
-
         if (y < 0)
         {
-            if (childObject != null)
-                childObject.transform.localScale = new Vector3(1, 1, 1);
+            if (childObject != null) childObject.transform.localScale = new Vector3(1, 1, 1);
+            if (movement2D.moveSpeed >= movement2D.minSpeed) movement2D.moveSpeed--;
         }
         else
         {
-            if (childObject != null)
-                childObject.transform.localScale = new Vector3(2, 2, 1);
+            if (childObject != null) childObject.transform.localScale = new Vector3(2, 2, 1);
         }
-
-        if (y < 0)
+        if (y > 0)
         {
-            if (movement2D.moveSpeed >= movement2D.minSpeed)
-                movement2D.moveSpeed--;
-        }
-        else if (y > 0)
-        {
-            if (movement2D.moveSpeed < 7f)
-                movement2D.moveSpeed++;
+            if (movement2D.moveSpeed < 7f) movement2D.moveSpeed++;
         }
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
 
     public void TakeDamage(float damage)
     {
+        if (isInvincible) return;
         playerCurrentHealth -= damage;
+        AudioManagerScript.Instance.PlayerSFX(0);
         uIHPgauge.UpdateGauge(playerCurrentHealth);
         StartCoroutine(Invincible());
         if (playerCurrentHealth <= 0)
         {
+            AudioManagerScript.Instance.PlayerSFX(1);
             Die();
         }
     }
 
     private void Die()
     {
-        GameObject effect = ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
-        StartCoroutine(DisableAfterTime(effect, 2f));
-
-        if (enemySpawnManager != null)
-        {
-            enemySpawnManager.isPlayerAlive = false;
-        }
+        ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
+        if (enemySpawnManager != null) enemySpawnManager.isPlayerAlive = false;
         gameObject.SetActive(false);
     }
 
-    public void LevelUp()
-    {
-        level++;
-    }
-
-    private IEnumerator AutoFireBullet()
-    {
-        while (true)
-        {
-            if (GameManager.instance != null && !GameManager.instance.isLive)
-            {
-                yield return null;
-                continue;
-            }
-
-            if ((int)level <= 1)
-            {
-                FireBullet(bulletSpawnPointLv1);
-            }
-            else if ((int)level == 2)
-            {
-                foreach (Transform spawnPoint in bulletSpawnPointLv2)
-                {
-                    FireBullet(spawnPoint);
-                }
-            }
-            else if ((int)level >= 3)
-            {
-                foreach (Transform spawnPoint in bulletSpawnPointLv3)
-                {
-                    FireBullet(spawnPoint);
-                }
-            }
-
-            float currentFireDelay = bulletFireDelay - ((level - 1) * fireDelayReduction);
-            currentFireDelay = Mathf.Max(currentFireDelay, minFireDelay);
-            yield return new WaitForSeconds(currentFireDelay);
-        }
-    }
-
-    private void FireBullet(Transform spawnPoint)
-    {
-        if (spawnPoint == null) return;
-
-        GameObject bulletObj = ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
-
-        if (bulletObj == null) return;
-
-        BulletController bulletScript = bulletObj.GetComponent<BulletController>();
-        if (bulletScript != null)
-        {
-            float calculatedDamage = baseDamage * level;
-            bulletScript.playerBulletDamage = calculatedDamage;
-        }
-    }
 
     private IEnumerator DisableAfterTime(GameObject obj, float time)
     {
@@ -201,13 +144,6 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         EnemyBulletController enemyBullet = collision.GetComponent<EnemyBulletController>();
-        if (collision.CompareTag("Item"))
-        {
-            if (GameManager.instance != null)
-            {
-                StartCoroutine(GameManager.instance.ItemSellectBars());
-            }
-        }
 
         if (collision.CompareTag("Enemy") && !isInvincible)
         {
@@ -224,41 +160,28 @@ public class PlayerController : MonoBehaviour
         isInvincible = true;
         gameObject.layer = invincibleLayer;
         float elapsedTime = 0f;
-
         while (elapsedTime < invincibleTime)
         {
-            foreach (SpriteRenderer renderer in spriteRen)
+            if (spriteRen != null && spriteRen.Length > 0)
             {
-                Color color = renderer.color;
-                color.a = 0f;
-                renderer.color = color;
+                foreach (SpriteRenderer renderer in spriteRen) { if (renderer != null) renderer.color = new Color(1, 1, 1, 0.5f); }
+                yield return new WaitForSeconds(blinkInterval);
+                foreach (SpriteRenderer renderer in spriteRen) { if (renderer != null) renderer.color = new Color(1, 1, 1, 1f); }
+                yield return new WaitForSeconds(blinkInterval);
             }
-
-            yield return new WaitForSeconds(blinkInterval);
-
-            foreach (SpriteRenderer renderer in spriteRen)
-            {
-                Color color = renderer.color;
-                color.a = 1f;
-                renderer.color = color;
-            }
-
-            yield return new WaitForSeconds(blinkInterval);
-
             elapsedTime += blinkInterval * 2;
         }
 
         foreach (SpriteRenderer renderer in spriteRen)
-            {
-                Color color = renderer.color;
-                color.a = 1f;
-                renderer.color = color;
-            }
+        {
+            Color color = renderer.color;
+            color.a = 1f;
+            renderer.color = color;
+        }
 
         gameObject.layer = playerLayer;
         isInvincible = false;
     }
-
 
     public void Next()
     {
@@ -267,32 +190,93 @@ public class PlayerController : MonoBehaviour
             status.gameObject.SetActive(false);
         }
 
-        int[] ran = new int[3];
-
-        while (true)
+        List<int> availableIndices = new List<int>();
+        for (int i = 0; i < sta.Length; i++)
         {
-            ran[0] = Random.Range(0, sta.Length);
-            ran[1] = Random.Range(0, sta.Length);
-            ran[2] = Random.Range(0, sta.Length);
-
-            if (ran[0] != ran[1] && ran[1] != ran[2] && ran[0] != ran[2])
+            if (sta[i].level < sta[i].data.maxLevel)
             {
-                break;
+                availableIndices.Add(i);
             }
         }
 
-        for (int i = 0; i < ran.Length; i++)
+        if (availableIndices.Count < 3)
         {
-            Status ranSta = sta[ran[i]];
+            foreach (int index in availableIndices)
+            {
+                sta[index].gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            int[] ran = new int[3];
+            while (true)
+            {
+                ran[0] = availableIndices[Random.Range(0, availableIndices.Count)];
+                ran[1] = availableIndices[Random.Range(0, availableIndices.Count)];
+                ran[2] = availableIndices[Random.Range(0, availableIndices.Count)];
 
-            if (ranSta.level == 5)
-            {
-                ranSta.gameObject.SetActive(false);
+                if (ran[0] != ran[1] && ran[1] != ran[2] && ran[0] != ran[2])
+                {
+                    break;
+                }
             }
-            else
+
+            for (int i = 0; i < ran.Length; i++)
             {
-                ranSta.gameObject.SetActive(true);
+                sta[ran[i]].gameObject.SetActive(true);
             }
+        }
+    }
+
+    public void UpgradePlayerDamage() { playerDamageLevel++; }
+    public void UpgradePlayerSpeed() { playerSpeedLevel++; if (movement2D != null) movement2D.moveSpeed += speedIncreasePerLevel; }
+    public void UpgradePlayerHP() { playerHPLevel++; playerHealth += healthIncreasePerLevel; playerCurrentHealth += healthIncreasePerLevel; if (uIHPgauge != null) { uIHPgauge.slider.maxValue = playerHealth; uIHPgauge.UpdateGauge(playerCurrentHealth); } }
+    public void UpgradePlayerBulletLevel() { playerBulletLevel++; }
+    public void UpgradePlayerBulletSize() { playerBulletSizeLevel++; }
+    public void UpgradePlayerDelay() { playerDelayLevel++; }
+
+    public int GetCurrentStatLevel(StatusData.StatusType type)
+    {
+        switch (type)
+        {
+            case StatusData.StatusType.Damage: return playerDamageLevel;
+            case StatusData.StatusType.Speed: return playerSpeedLevel;
+            case StatusData.StatusType.HP: return playerHPLevel;
+            case StatusData.StatusType.WeaponNumber: return playerBulletLevel;
+            case StatusData.StatusType.BulletSize: return playerBulletSizeLevel;
+            case StatusData.StatusType.Delay: return playerDelayLevel;
+            default: return 1;
+        }
+    }
+
+    private IEnumerator AutoFireBullet()
+    {
+        AudioManagerScript.Instance.PlayerSFX(2);
+        while (true)
+        {
+            if (GameManager.instance != null && !GameManager.instance.isLive) { yield return null; continue; }
+
+            if (playerBulletLevel <= 1) FireBullet(bulletSpawnPointLv1);
+            else if (playerBulletLevel == 2) { foreach (Transform sp in bulletSpawnPointLv2) FireBullet(sp); }
+            else if (playerBulletLevel >= 3) { foreach (Transform sp in bulletSpawnPointLv3) FireBullet(sp); }
+
+            float currentFireDelay = baseFireDelay - ((playerDelayLevel - 1) * fireDelayReduction);
+            currentFireDelay = Mathf.Max(currentFireDelay, minFireDelay);
+            yield return new WaitForSeconds(currentFireDelay);
+        }
+    }
+
+    private void FireBullet(Transform spawnPoint)
+    {
+        if (spawnPoint == null) return;
+        GameObject bulletObj = ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
+        if (bulletObj == null) return;
+        BulletController bulletScript = bulletObj.GetComponent<BulletController>();
+        if (bulletScript != null)
+        {
+            bulletScript.playerBulletDamage = baseDamage * playerDamageLevel;
+            float calculatedSize = 1f + ((playerBulletSizeLevel - 1) * sizeIncreasePerLevel);
+            bulletScript.SetSize(calculatedSize);
         }
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -15,24 +16,33 @@ public class GameManager : MonoBehaviour
     public GameObject startButtonUI;
     public GameObject hp_Gauge;
 
-
     [Header("Stage Management")]
     public GameObject[] backgroundObject;
-    public GameObject[] stagePrefabs;
     private GameObject currentStageObject;
 
-    [Header("Enternal Scripts")]
+    [Header("External Scripts")]
     public EnemySpawnManager enemySpawn;
-
     public PlayerController playerCon;
     public SettingMenu settingMenu;
     [SerializeField] private GameObject itemBack;
     [SerializeField] private GameObject statusBars;
 
+    [Header("PoolsTag")]
+    public string StageTag_1 = "StageBG_1";
+    public string StageTag_2 = "StageBG_2";
+    public string StageTag_3 = "StageBG_3";
+
     void Awake()
     {
         instance = this;
         isGameStarted = false;
+    }
+
+    void Start()
+    {
+        AudioManagerScript.Instance.PlayBgm(0);
+        settingMenu._menu[4].SetActive(false);
+        isLive = true;
         playerObject.SetActive(false);
         enemySpawnObject.SetActive(false);
         hp_Gauge.SetActive(false);
@@ -40,19 +50,38 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && !isGameStarted)
         {
             StartGame();
-            enabled = false;
         }
     }
 
+
+    public IEnumerator ItemSellectBars()
+    {
+        Stop();
+        itemBack.SetActive(true);
+        yield return new WaitForSecondsRealtime(1f);
+
+        if (playerCon != null) playerCon.Next(); // PlayerController�� Next() ȣ��
+
+        statusBars.SetActive(true);
+    }
+
+    public IEnumerator StatusSellectBarsBack()
+    {
+        itemBack.SetActive(false);
+        statusBars.SetActive(false);
+        Resume();
+        yield return null;
+    }
 
     public void StartGame()
     {
         if (!isGameStarted)
         {
-            settingMenu.scoreText.gameObject.SetActive(true);
+            if (settingMenu != null && settingMenu.scoreText != null)
+                settingMenu.scoreText.gameObject.SetActive(true);
             isGameStarted = true;
             playerObject.SetActive(true);
             enemySpawnObject.SetActive(true);
@@ -64,61 +93,60 @@ public class GameManager : MonoBehaviour
             }
 
 
-            stageloadIndex = enemySpawn.currentStage;
 
-            LoadStage(stageloadIndex);
+            LoadStage(enemySpawn.currentStage);
         }
     }
 
-    private void LoadStage(int stageIndex)
+    public void LoadStage(int stageIndex)
     {
         if (currentStageObject != null)
         {
-            Destroy(currentStageObject);
+            currentStageObject.SetActive(false);
         }
-        if (stageIndex > 0 && stageIndex <= stagePrefabs.Length)
-        {
-            currentStageObject = Instantiate(stagePrefabs[stageIndex - 1]);
-            currentStageObject.transform.position = new Vector3(-2.8f, -0.5f, 0);
-        }
-    }
 
-    public void NextStage()
-    {
-        stageloadIndex++;
-        LoadStage(stageloadIndex);
+        if (stageIndex > 0 && stageIndex < 4)
+        {
+            currentStageObject = ObjectPooler.Instance.SpawnFromPool(StageTag_1, new Vector3(-2.8f, -0.5f, 0), Quaternion.identity);
+            AudioManagerScript.Instance.PlayBgm(1);
+            
+        }
+        else if (stageIndex >= 4 && stageIndex < 7)
+        {
+            currentStageObject = ObjectPooler.Instance.SpawnFromPool(StageTag_2, new Vector3(-2.8f, -0.5f, 0), Quaternion.identity);
+            if (stageIndex == 5)
+            {
+                AudioManagerScript.Instance.PlayBgm(6);
+            }
+            else
+            {
+                AudioManagerScript.Instance.PlayBgm(2);
+            }
+        }
+        else if (stageIndex >= 7 && stageIndex < 11)
+        {
+            currentStageObject = ObjectPooler.Instance.SpawnFromPool(StageTag_3, new Vector3(-2.8f, -0.5f, 0), Quaternion.identity);
+            if (stageIndex == 10)
+            {
+                AudioManagerScript.Instance.PlayBgm(6);
+            }
+            else
+            {
+                AudioManagerScript.Instance.PlayBgm(3);
+            }
+        }
     }
 
     public void Stop()
     {
         isLive = false;
-        Time.timeScale = 0;
+        Time.timeScale = 1;
     }
-
     public void Resume()
     {
         isLive = true;
         Time.timeScale = 1;
     }
-
-    public IEnumerator ItemSellectBars()
-    {
-
-        itemBack.SetActive(true);
-
-        yield return new WaitForSeconds(1f);
-
-        playerCon.Next();
-        statusBars.SetActive(true);
-
-        Stop();
-    }
-
-    public IEnumerator StatusSellectBarsBack()
-    {
-        itemBack.SetActive(false);
-        statusBars.SetActive(false);
-        Resume();
-        yield return new WaitForSeconds(0f);
-    }
+     
 }
+
