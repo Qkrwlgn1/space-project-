@@ -21,7 +21,6 @@ public class Enemy2 : Enemy
         StopAllCoroutines();
         StartCoroutine(MainBehaviorRoutine());
     }
-
     private IEnumerator MainBehaviorRoutine()
     {
         isEntering = true;
@@ -46,7 +45,6 @@ public class Enemy2 : Enemy
 
         StartCoroutine(base.UpdateRandomMovement());
     }
-
     protected override void Update()
     {
         if (GameManager.instance != null && !GameManager.instance.isLive)
@@ -57,7 +55,6 @@ public class Enemy2 : Enemy
             base.Update();
         }
     }
-
     protected override IEnumerator AutoFire()
     {
         while (gameObject.activeInHierarchy && !isDead)

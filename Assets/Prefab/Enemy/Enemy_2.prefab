@@ -206,7 +206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb50326fb8cc909488dd3e059505525a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyHealth: 20
+  enemyHealth: 30
   enemyCurrentHealth: 0
   explosionEffectTag: EnemyExplosion
   enemyBulletTag: EnemyBullet

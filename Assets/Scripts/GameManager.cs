@@ -37,7 +37,6 @@ public class GameManager : MonoBehaviour
         instance = this;
         isGameStarted = false;
     }
-
     void Start()
     {
         AudioManagerScript.Instance.PlayBgm(0);
@@ -47,7 +46,6 @@ public class GameManager : MonoBehaviour
         enemySpawnObject.SetActive(false);
         hp_Gauge.SetActive(false);
     }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return) && !isGameStarted)
@@ -55,8 +53,6 @@ public class GameManager : MonoBehaviour
             StartGame();
         }
     }
-
-
     public IEnumerator ItemSellectBars()
     {
         Stop();
@@ -67,7 +63,6 @@ public class GameManager : MonoBehaviour
 
         statusBars.SetActive(true);
     }
-
     public IEnumerator StatusSellectBarsBack()
     {
         itemBack.SetActive(false);
@@ -75,7 +70,6 @@ public class GameManager : MonoBehaviour
         Resume();
         yield return null;
     }
-
     public void StartGame()
     {
         if (!isGameStarted)
@@ -97,7 +91,6 @@ public class GameManager : MonoBehaviour
             LoadStage(enemySpawn.currentStage);
         }
     }
-
     public void LoadStage(int stageIndex)
     {
         if (currentStageObject != null)
@@ -136,7 +129,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
     public void Stop()
     {
         isLive = false;
@@ -147,6 +139,5 @@ public class GameManager : MonoBehaviour
         isLive = true;
         Time.timeScale = 1;
     }
-     
 }
 

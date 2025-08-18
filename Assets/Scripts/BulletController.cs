@@ -11,17 +11,14 @@ public class BulletController : MonoBehaviour
     {
         originalScale = transform.localScale;
     }
-
     void OnEnable()
     {
         transform.localScale = originalScale;
     }
-
     public void SetSize(float sizeMultiplier)
     {
         transform.localScale = originalScale * sizeMultiplier;
     }
-
     void Update()
     {
         if (GameManager.instance != null && !GameManager.instance.isLive)
@@ -29,12 +26,10 @@ public class BulletController : MonoBehaviour
 
         transform.Translate(Vector3.up * bulletSpeed * Time.deltaTime);
     }
-
     void OnBecameInvisible()
     {
         gameObject.SetActive(false);
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))

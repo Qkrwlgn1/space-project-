@@ -29,14 +29,11 @@ public class Boss : Enemy
         StopAllCoroutines();
         StartCoroutine(BossPatternRoutine());
     }
-
-    // ### �߰�: �θ��� Update �Լ��� ����Ἥ '�̵�' ������ ���� ###
     protected override void Update()
     {
         if (GameManager.instance != null && !GameManager.instance.isLive)
             return;
 
-        // �̵�(transform.position += ...) �κ��� �����ϰ�, ȸ�� ������ ����ϴ�.
         if (player != null)
         {
             gizmoTargetPosition = player.position;
@@ -48,18 +45,12 @@ public class Boss : Enemy
             }
         }
 
-        // ȭ�� ��踦 ����� �ʵ��� �ϴ� ����� �����մϴ�.
         KeepWithinScreenBounds();
     }
-
-    // ### �߰�: ���� �̵� �ڷ�ƾ�� ����Ἥ �ƹ��͵� ���� �ʵ��� ���� ###
     protected override IEnumerator UpdateRandomMovement()
     {
-        // �ƹ��͵� ���� �ʰ� ��� �����Ͽ� ���� �̵��� ��õ������ �����մϴ�.
         yield break;
     }
-
-    // ### �߰�: �θ��� ȭ�� ��� ��Ģ�� ����Ἥ ȭ�� ��ü�� ����ϵ��� �� ###
     protected override void KeepWithinScreenBounds()
     {
         Vector3 pos = transform.position;
@@ -76,10 +67,8 @@ public class Boss : Enemy
             transform.position = pos;
         }
     }
-
     private IEnumerator BossPatternRoutine()
     {
-        // ������ �������ڸ��� �ٷ� ������ ������ �� �ֵ��� hasEnteredScreen�� true�� ����
         hasEnteredScreen = true;
 
         while (gameObject.activeInHierarchy && !isDead)
@@ -108,8 +97,6 @@ public class Boss : Enemy
             yield return new WaitForSeconds(patternInterval);
         }
     }
-
-    //1��° ����
     private IEnumerator BurstFirePattern()
     {
         if (player == null) yield break;
@@ -127,8 +114,6 @@ public class Boss : Enemy
             yield return new WaitForSeconds(burstInterval);
         }
     }
-
-    //2��° ����
     private IEnumerator CircleShotPattern()
     {
         float currentAngleOffset = 0f;
@@ -154,8 +139,6 @@ public class Boss : Enemy
 
         yield return null;
     }
-
-    //3��° ����
     private IEnumerator WhipShotPattern()
     {
         int bulletCount = 15;
@@ -173,7 +156,6 @@ public class Boss : Enemy
             yield return new WaitForSeconds(whipInterval);
         }
     }
-
     private void FireBulletWithDamage(string bulletTag, int damage, Vector3 position, Quaternion rotation)
     {
         GameObject bulletObj = ObjectPooler.Instance.SpawnFromPool(bulletTag, position, rotation);

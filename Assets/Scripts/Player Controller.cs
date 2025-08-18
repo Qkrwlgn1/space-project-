@@ -64,7 +64,6 @@ public class PlayerController : MonoBehaviour
         rigid = gameObject.GetComponent<Rigidbody2D>();
         spriteRen = GetComponentsInChildren<SpriteRenderer>();
     }
-
     void Start()
     {
         playerLayer = LayerMask.NameToLayer("Player");
@@ -75,13 +74,11 @@ public class PlayerController : MonoBehaviour
         mainCamera = Camera.main;
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
     }
-
     void Update()
     {
         if (GameManager.instance != null && !GameManager.instance.isLive) return;
         Move();
     }
-
     void LateUpdate()
     {
         Vector3 viewPos = transform.position;
@@ -89,7 +86,6 @@ public class PlayerController : MonoBehaviour
         viewPos.y = Mathf.Clamp(viewPos.y, screenBounds.y * -1 + screenPadding, screenBounds.y - screenPadding);
         transform.position = viewPos;
     }
-
     private void Move()
     {
         float x = Input.GetAxisRaw("Horizontal");
@@ -109,7 +105,6 @@ public class PlayerController : MonoBehaviour
         }
         movement2D.MoveTo(new Vector3(x, y, 0));
     }
-
     public void TakeDamage(float damage)
     {
         if (isInvincible) return;
@@ -123,15 +118,12 @@ public class PlayerController : MonoBehaviour
             Die();
         }
     }
-
     private void Die()
     {
         ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
         if (enemySpawnManager != null) enemySpawnManager.isPlayerAlive = false;
         gameObject.SetActive(false);
     }
-
-
     private IEnumerator DisableAfterTime(GameObject obj, float time)
     {
         yield return new WaitForSeconds(time);
@@ -140,10 +132,20 @@ public class PlayerController : MonoBehaviour
             obj.SetActive(false);
         }
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         EnemyBulletController enemyBullet = collision.GetComponent<EnemyBulletController>();
+
+        if (collision.CompareTag("Item"))
+        {
+            collision.gameObject.SetActive(false);
+            if (GameManager.instance != null)
+            {
+
+                StartCoroutine(GameManager.instance.ItemSellectBars());
+            }
+            return;
+        }
 
         if (collision.CompareTag("Enemy") && !isInvincible)
         {
@@ -154,7 +156,6 @@ public class PlayerController : MonoBehaviour
             TakeDamage(enemyBullet.enemyBulletDamage);
         }
     }
-
     public IEnumerator Invincible()
     {
         isInvincible = true;
@@ -182,7 +183,6 @@ public class PlayerController : MonoBehaviour
         gameObject.layer = playerLayer;
         isInvincible = false;
     }
-
     public void Next()
     {
         foreach (Status status in sta)
@@ -227,14 +227,12 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
     public void UpgradePlayerDamage() { playerDamageLevel++; }
     public void UpgradePlayerSpeed() { playerSpeedLevel++; if (movement2D != null) movement2D.moveSpeed += speedIncreasePerLevel; }
     public void UpgradePlayerHP() { playerHPLevel++; playerHealth += healthIncreasePerLevel; playerCurrentHealth += healthIncreasePerLevel; if (uIHPgauge != null) { uIHPgauge.slider.maxValue = playerHealth; uIHPgauge.UpdateGauge(playerCurrentHealth); } }
     public void UpgradePlayerBulletLevel() { playerBulletLevel++; }
     public void UpgradePlayerBulletSize() { playerBulletSizeLevel++; }
     public void UpgradePlayerDelay() { playerDelayLevel++; }
-
     public int GetCurrentStatLevel(StatusData.StatusType type)
     {
         switch (type)
@@ -248,7 +246,6 @@ public class PlayerController : MonoBehaviour
             default: return 1;
         }
     }
-
     private IEnumerator AutoFireBullet()
     {
         while (true)
@@ -264,7 +261,6 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(currentFireDelay);
         }
     }
-
     private void FireBullet(Transform spawnPoint)
     {
         AudioManagerScript.Instance.PlayerSFX(2);

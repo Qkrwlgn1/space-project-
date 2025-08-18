@@ -38,15 +38,8 @@ public class EnemySpawnManager : MonoBehaviour
 
     void Start()
     {
-        if (enemySpawnPoints == null || enemySpawnPoints.Length < 9)
-        {
-            Debug.LogError("EnemySpawnManager: 9���� ���� ����Ʈ�� ��� �������� �ʾҽ��ϴ�!");
-            return;
-        }
-
         StartStage(currentStage);
     }
-
     void Update()
     {
         if (GameManager.instance != null && !GameManager.instance.isLive)
@@ -74,18 +67,13 @@ public class EnemySpawnManager : MonoBehaviour
             enemySpawnDelay = Random.Range(1.5f, 3f);
         }
     }
-
-    // ### ����: ���ο� ���� ������ ���� �Լ� ###
     void SpawnBatch()
     {
-        // 1. ���� ������������ ���� ������ ����Ʈ ����� �����ɴϴ�.
         List<Transform> validPoints = GetValidSpawnPointsForStage(currentStage);
 
-        // 2. ���߿��� ���� ����ִ� ����Ʈ�� �߷����ϴ�.
         List<Transform> availablePoints = FindUnoccupiedPoints(validPoints);
         if (availablePoints.Count == 0) return;
 
-        // 3. ������ ���� ���� ���մϴ�.
         int enemiesToSpawnInBatch = Random.Range(1, 4);
         enemiesToSpawnInBatch = Mathf.Min(enemiesToSpawnInBatch, availablePoints.Count);
 
@@ -93,11 +81,9 @@ public class EnemySpawnManager : MonoBehaviour
         {
             if (aliveEnemies >= maxAliveEnemies || enemySpawnedThisStage >= enemyToSpawnThisStage) break;
 
-            // 4. ����ִ� ���� ����Ʈ �� �ϳ��� �������� �����մϴ�.
             int randIndex = Random.Range(0, availablePoints.Count);
             Transform spawnPoint = availablePoints[randIndex];
 
-            // 5. �ش� ���� ����Ʈ�� �ε����� ã�� �׿� �´� ���� �����մϴ�.
             int pointIndex = System.Array.IndexOf(enemySpawnPoints, spawnPoint);
             string tagToSpawn = GetEnemyTagForPointIndex(pointIndex);
 
@@ -106,26 +92,21 @@ public class EnemySpawnManager : MonoBehaviour
             availablePoints.RemoveAt(randIndex);
         }
     }
-
-    // ### �߰�: ������������ ��ȿ�� ���� ����Ʈ ����� ��ȯ�ϴ� �Լ� ###
     private List<Transform> GetValidSpawnPointsForStage(int stage)
     {
         List<Transform> validPoints = new List<Transform>();
 
-        // Enemy1 ���� ����Ʈ (3, 4, 6, 7�� -> �ε��� 2, 3, 5, 6)
         validPoints.Add(enemySpawnPoints[2]);
         validPoints.Add(enemySpawnPoints[3]);
         validPoints.Add(enemySpawnPoints[5]);
         validPoints.Add(enemySpawnPoints[6]);
 
-        // 3������������ Enemy2 ���� ����Ʈ �߰� (2, 8�� -> �ε��� 1, 7)
         if (stage >= 3)
         {
             validPoints.Add(enemySpawnPoints[1]);
             validPoints.Add(enemySpawnPoints[7]);
         }
 
-        // 6������������ Enemy3 ���� ����Ʈ �߰� (1, 9�� -> �ε��� 0, 8)
         if (stage >= 6)
         {
             validPoints.Add(enemySpawnPoints[0]);
@@ -134,24 +115,20 @@ public class EnemySpawnManager : MonoBehaviour
 
         return validPoints;
     }
-
-    // ### �߰�: ���� ����Ʈ �ε����� ���� �� �±׸� ��ȯ�ϴ� �Լ� ###
     private string GetEnemyTagForPointIndex(int index)
     {
         switch (index)
         {
-            case 1: // 2�� ���� ����Ʈ
-            case 7: // 8�� ���� ����Ʈ
+            case 1:
+            case 7:
                 return enemyTag2;
-            case 0: // 1�� ���� ����Ʈ
-            case 8: // 9�� ���� ����Ʈ
+            case 0:
+            case 8:
                 return enemyTag3;
-            default: // 3, 4, 5(����), 6, 7�� ���� ����Ʈ
+            default:
                 return enemyTag1;
         }
     }
-
-    // ### �߰�: �־��� ����Ʈ ��� �� ����ִ� ���� ��ȯ�ϴ� �Լ� ###
     private List<Transform> FindUnoccupiedPoints(List<Transform> pointsToCheck)
     {
         List<Transform> availablePoints = new List<Transform>(pointsToCheck);
@@ -162,9 +139,9 @@ public class EnemySpawnManager : MonoBehaviour
             if (!enemy.gameObject.activeInHierarchy) continue;
 
             Transform closestPoint = null;
-            float minDistance = 1.5f; // ���� �Ǵ� �ݰ��� ���� �ø�
+            float minDistance = 1.5f;
 
-            foreach (Transform point in pointsToCheck) // ��ü ��ȿ ����Ʈ�� ��
+            foreach (Transform point in pointsToCheck)
             {
                 float distance = Vector3.Distance(enemy.transform.position, point.position);
                 if (distance < minDistance)
@@ -180,8 +157,6 @@ public class EnemySpawnManager : MonoBehaviour
         }
         return availablePoints;
     }
-
-    // ### �߰�: ���� �����ϴ� �ܼ� ���� �Լ� ###
     void SpawnEnemy(string tag, Transform spawnPoint)
     {
         Vector2 offset = Random.insideUnitCircle * 0.3f;
@@ -196,9 +171,6 @@ public class EnemySpawnManager : MonoBehaviour
         enemySpawnedThisStage++;
         aliveEnemies++;
     }
-
-    // ### ���� �Լ����� ���� �״�� ���� ###
-    #region ���� �Լ��� (���� ����)
     public void OnEnemyKilled(Vector3 deadEnemyPosition)
     {
         aliveEnemies--;
@@ -226,7 +198,6 @@ public class EnemySpawnManager : MonoBehaviour
     }
     void SpawnBoss()
     {
-        // ������ 5�� ���� ����Ʈ(�ε��� 4)������ ����
         if (enemySpawnPoints.Length > 4)
         {
             SpawnEnemy(bossTag, enemySpawnPoints[4]);
@@ -236,7 +207,6 @@ public class EnemySpawnManager : MonoBehaviour
     {
         hasItemDroppedThisStage = true;
     }
-
     public IEnumerator NextStageRoutine()
     {
         yield return new WaitForSeconds(stageClearDelay);
@@ -247,5 +217,4 @@ public class EnemySpawnManager : MonoBehaviour
             gameManager.LoadStage(currentStage);
         }
     }
-    #endregion
 }

@@ -13,7 +13,6 @@ public class UIHPgauge : MonoBehaviour
             slider.value = maxHealth;
         }
     }
-
     public void UpdateGauge(float amount)
     {
         if (slider != null)

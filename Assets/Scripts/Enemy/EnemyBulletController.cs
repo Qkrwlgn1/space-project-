@@ -5,14 +5,12 @@ public class EnemyBulletController : MonoBehaviour
     public float enemyBulletSpeed;
     public float enemyBulletDamage;
 
-
     void Update()
     {
         if (!GameManager.instance.isLive)
             return;
         transform.position += -transform.up * enemyBulletSpeed * Time.deltaTime;
     }
-
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -24,7 +22,6 @@ public class EnemyBulletController : MonoBehaviour
             }
         }
     }
-
     void OnBecameInvisible()
     {
         gameObject.SetActive(false);

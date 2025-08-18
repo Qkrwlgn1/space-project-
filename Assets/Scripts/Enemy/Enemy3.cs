@@ -34,7 +34,6 @@ public class Enemy3 : Enemy
 
         StartCoroutine(AutoFire());
     }
-
     protected override void Update()
     {
         if (GameManager.instance != null && !GameManager.instance.isLive) return;
@@ -54,7 +53,6 @@ public class Enemy3 : Enemy
             base.Update();
         }
     }
-
     protected override IEnumerator AutoFire()
     {
         yield return new WaitUntil(() => !isEntering);

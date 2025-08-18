@@ -13,7 +13,6 @@ public class Item : MonoBehaviour
 
         transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
     }
-
     void OnBecameInvisible()
     {
         gameObject.SetActive(false);

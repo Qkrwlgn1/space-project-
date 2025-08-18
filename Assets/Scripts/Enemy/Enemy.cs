@@ -66,7 +66,6 @@ public class Enemy : MonoBehaviour
         StartCoroutine(AutoFire());
         StartCoroutine(UpdateRandomMovement());
     }
-
     protected virtual void Update()
     {
         if (GameManager.instance != null && !GameManager.instance.isLive)
@@ -100,7 +99,6 @@ public class Enemy : MonoBehaviour
 
         KeepWithinScreenBounds();
     }
-
     protected virtual void KeepWithinScreenBounds()
     {
         Vector3 pos = transform.position;
@@ -117,7 +115,6 @@ public class Enemy : MonoBehaviour
             transform.position = pos;
         }
     }
-
     public void TakeDamage(float damage)
     {
         if (isDead) return;
@@ -129,7 +126,6 @@ public class Enemy : MonoBehaviour
             Die();
         }
     }
-
     public virtual void Die()
     {
         if (isDead) return;
@@ -149,7 +145,6 @@ public class Enemy : MonoBehaviour
 
         gameObject.SetActive(false);
     }
-
     private void SpawnItem()
     {
         if (spawnManager != null && !spawnManager.HasItemDroppedThisStage)
@@ -161,7 +156,6 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
     protected virtual IEnumerator AutoFire()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
@@ -191,7 +185,6 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
     private Vector3 CalculateAvoidanceVector()
     {
         Vector3 avoidanceVector = Vector3.zero;
@@ -211,7 +204,6 @@ public class Enemy : MonoBehaviour
         }
         return avoidanceVector.normalized;
     }
-
     protected virtual IEnumerator UpdateRandomMovement()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
@@ -225,7 +217,6 @@ public class Enemy : MonoBehaviour
             yield return new WaitForSeconds(waitTime);
         }
     }
-
     void MoveToEnterScreen()
     {
         Vector3 screenCenter = Vector3.zero;
@@ -236,7 +227,6 @@ public class Enemy : MonoBehaviour
             hasEnteredScreen = true;
         }
     }
-
     bool IsWithinScreenBounds()
     {
         Vector3 pos = transform.position;
@@ -245,15 +235,12 @@ public class Enemy : MonoBehaviour
                pos.y >= 0 &&
                pos.y <= screenBounds.y - screenBoundsPadding;
     }
-
     void CalculateScreenBounds()
     {
         if (mainCamera == null) return;
         float distance = Vector3.Distance(transform.position, mainCamera.transform.position);
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, distance));
     }
-
-
     private void EnemyDieScore(EnemyType type)
     {
         switch (type)

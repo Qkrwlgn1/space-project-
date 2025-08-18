@@ -25,7 +25,6 @@ public class Status : MonoBehaviour
             textDesc = texts[1];
         }
     }
-
     void OnEnable()
     {
         if (playerCon != null && data != null)
@@ -34,7 +33,6 @@ public class Status : MonoBehaviour
             UpdateUI();
         }
     }
-
     void UpdateUI()
     {
         if (data == null || textLevel == null || textDesc == null) return;
@@ -58,7 +56,6 @@ public class Status : MonoBehaviour
 
         GetComponent<Button>().interactable = (level < data.maxLevel);
     }
-
     public void OnClick()
     {
         if (playerCon == null) return;

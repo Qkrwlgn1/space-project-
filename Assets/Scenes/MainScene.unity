@@ -743,6 +743,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: minFireDelay
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: playerHealth
       value: 10
       objectReference: {fileID: 0}
@@ -779,12 +783,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1508646804}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: fireDelayReduction
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: playerBulletDamage
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: playerCurrentHealth
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243810982135447282, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
+      propertyPath: healthIncreasePerLevel
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1267775638094428201, guid: 043bd0284babcee4bb448579ded372d6, type: 3}
       propertyPath: m_Layer

@@ -7,7 +7,6 @@ public class StatusData : ScriptableObject
     public enum StatusType { HP, Damage, Speed, WeaponNumber, BulletSize, Delay}
 
     [Header("# Status Type")]
-
     public StatusType statusType;
     public int statusId;
     public string statusName;
@@ -17,7 +16,6 @@ public class StatusData : ScriptableObject
     public int maxLevel = 5;
 
     [Header("# Status Data")]
-
     public int HP;
     public int Damage;
     public float Speed;

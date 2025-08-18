@@ -270,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc83ad851603d3b4f908a0bd99bfd420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyHealth: 50
+  enemyHealth: 100
   enemyCurrentHealth: 0
   explosionEffectTag: EnemyExplosion
   enemyBulletTag: EnemyBullet
@@ -294,6 +294,7 @@ MonoBehaviour:
   bulletsPerShot: 8
   spreadAngle: 80
   fireDelay: 2
+  entrySpeed: 3
 --- !u!1 &7429453950765640817
 GameObject:
   m_ObjectHideFlags: 0
