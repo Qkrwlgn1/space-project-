@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 public class AudioManagerScript : MonoBehaviour
 {
     public static AudioManagerScript Instance { get; private set; }
@@ -13,8 +14,10 @@ public class AudioManagerScript : MonoBehaviour
     public AudioClip[] _audioEnemySfx;
     public AudioClip _audioUISfx;
     public AudioMixer audioMixer;
+    public AudioMixerGroup sfxGroup;
     public GameObject obj;
     private Queue<AudioSource> audioPool = new Queue<AudioSource>();
+    public TextMeshProUGUI scoreText;
     private int poolSize = 5;
     private bool isBulletPlaying = false;
 
@@ -37,10 +40,20 @@ public class AudioManagerScript : MonoBehaviour
         {
             obj.transform.SetParent(this.transform);
             AudioSource source = obj.AddComponent<AudioSource>();
+            source.outputAudioMixerGroup = sfxGroup;
             source.spatialBlend = 0f;
             source.playOnAwake = false;
             audioPool.Enqueue(source);
         }
+    }
+    public void AddScore(float point)
+    {
+        SettingMenu.currentScore += point * Time.deltaTime;
+        UpdateScoreText();
+    }
+    void UpdateScoreText()
+    {
+        scoreText.text = "Score : " + Mathf.FloorToInt(SettingMenu.currentScore);
     }
 
     public void SetMasterVolume(float volume)

@@ -268,7 +268,6 @@ public class PlayerController : MonoBehaviour
     private void FireBullet(Transform spawnPoint)
     {
         AudioManagerScript.Instance.PlayerSFX(2);
-
         if (spawnPoint == null) return;
         GameObject bulletObj = ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
         if (bulletObj == null) return;

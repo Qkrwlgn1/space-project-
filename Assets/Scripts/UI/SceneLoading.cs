@@ -17,7 +17,7 @@ public class SceneLoading : MonoBehaviour
         loadOperation = SceneManager.LoadSceneAsync("MainScene");
         loadOperation.allowSceneActivation = false;
         sceneCount++;
-
+        SettingMenu.currentScore = 0;
         StartCoroutine(GameLoading());
     }
 

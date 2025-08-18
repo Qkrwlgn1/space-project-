@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
@@ -11,7 +13,6 @@ public class Item : MonoBehaviour
 
         transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
     }
-
 
     void OnBecameInvisible()
     {
