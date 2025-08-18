@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8797314294017403155}
   - component: {fileID: 6500137983905729246}
   - component: {fileID: 8519907863428269376}
-  - component: {fileID: 3610595947692216116}
+  - component: {fileID: -2349245864135660498}
   m_Layer: 7
   m_Name: Enemy_2
   m_TagString: Enemy
@@ -194,7 +194,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0.019570012, y: 0.13489594}
   m_Size: {x: 1.118584, y: 0.24397448}
   m_Direction: 1
---- !u!114 &3610595947692216116
+--- !u!114 &-2349245864135660498
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -203,30 +203,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 461341101278608393}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c0390c202bbbd740a2b4013140f6285, type: 3}
+  m_Script: {fileID: 11500000, guid: fb50326fb8cc909488dd3e059505525a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyHealth: 60
+  enemyHealth: 20
   explosionEffectTag: EnemyExplosion
   enemyBulletTag: EnemyBullet
   dropItemTag: Item
-  enemyType: 1
-  uIHPgauge: {fileID: 0}
-  enemyFireDelay: 0.4
+  enemyFireDelay: 1
   predictionTime: 0.5
   isDropItem: 1
   bulletSpawnPoint: {fileID: 4705606430147703698}
   moveSpeed: 2
-  rotationSpeed: 50
+  rotationSpeed: 150
   minMoveWaitTime: 1
   maxMoveWaitTime: 3
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   avoidanceRadius: 1
   avoidanceForce: 5
   screenBoundsPadding: 0.5
   spawnManager: {fileID: 0}
+  burstCount: 2
+  burstInterval: 0.2
+  entrySpeed: 4
 --- !u!1 &1540721942793318534
 GameObject:
   m_ObjectHideFlags: 0

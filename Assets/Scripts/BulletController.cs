@@ -5,12 +5,28 @@ public class BulletController : MonoBehaviour
     public float bulletSpeed;
     public float playerBulletDamage;
 
+    private Vector3 originalScale;
+
+    void Awake()
+    {
+        originalScale = transform.localScale;
+    }
+
+    void OnEnable()
+    {
+        transform.localScale = originalScale;
+    }
+
+    public void SetSize(float sizeMultiplier)
+    {
+        transform.localScale = originalScale * sizeMultiplier;
+    }
 
     void Update()
     {
-        if (!GameManager.instance.isLive)
+        if (GameManager.instance != null && !GameManager.instance.isLive)
             return;
-            
+
         transform.Translate(Vector3.up * bulletSpeed * Time.deltaTime);
     }
 
@@ -31,5 +47,4 @@ public class BulletController : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-
 }

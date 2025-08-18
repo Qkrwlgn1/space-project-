@@ -37,14 +37,12 @@ public class Enemy : MonoBehaviour
 
     public EnemySpawnManager spawnManager;
 
-    private Camera mainCamera;
-    private Vector3 screenBounds;
+    protected Camera mainCamera;
+    protected Vector3 screenBounds;
     protected bool hasEnteredScreen = false;
-
     protected Transform player;
-    private Vector3 moveDestination;
-    private Vector3 gizmoTargetPosition;
-
+    protected Vector3 moveDestination;
+    protected Vector3 gizmoTargetPosition;
     protected bool isDead = false;
 
     public virtual void OnEnable()
@@ -69,7 +67,7 @@ public class Enemy : MonoBehaviour
         StartCoroutine(UpdateRandomMovement());
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (GameManager.instance != null && !GameManager.instance.isLive)
             return;
@@ -99,6 +97,25 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
+
+        KeepWithinScreenBounds();
+    }
+
+    protected virtual void KeepWithinScreenBounds()
+    {
+        Vector3 pos = transform.position;
+        bool needsRepositioning = false;
+
+        if (pos.x < -screenBounds.x + screenBoundsPadding) { pos.x = -screenBounds.x + screenBoundsPadding; needsRepositioning = true; }
+        else if (pos.x > screenBounds.x + screenBoundsPadding) { pos.x = screenBounds.x - screenBoundsPadding; needsRepositioning = true; }
+
+        if (pos.y < 0) { pos.y = 0; needsRepositioning = true; }
+        else if (pos.y > screenBounds.y - screenBoundsPadding) { pos.y = screenBounds.y - screenBoundsPadding; needsRepositioning = true; }
+
+        if (needsRepositioning)
+        {
+            transform.position = pos;
+        }
     }
 
     public void TakeDamage(float damage)
@@ -106,7 +123,6 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
 
         enemyCurrentHealth -= damage;
-        Debug.Log("Enemy hit!  HP : " + enemyCurrentHealth);
         if (enemyCurrentHealth <= 0)
         {
             EnemyDieScore(enemyType);
@@ -119,8 +135,7 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        GameObject effect = ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
-        StartCoroutine(DisableAfterTime(effect, 2f));
+        ObjectPooler.Instance.SpawnFromPool(explosionEffectTag, transform.position, Quaternion.identity);
 
         if (isDropItem)
         {
@@ -147,10 +162,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public virtual IEnumerator AutoFire()
+    protected virtual IEnumerator AutoFire()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
-        while (gameObject.activeInHierarchy)
+        while (gameObject.activeInHierarchy && !isDead)
         {
             if (player != null)
             {
@@ -177,15 +192,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator DisableAfterTime(GameObject obj, float time)
-    {
-        yield return new WaitForSeconds(time);
-        if (obj != null)
-        {
-            obj.SetActive(false);
-        }
-    }
-
     private Vector3 CalculateAvoidanceVector()
     {
         Vector3 avoidanceVector = Vector3.zero;
@@ -206,11 +212,11 @@ public class Enemy : MonoBehaviour
         return avoidanceVector.normalized;
     }
 
-    public virtual IEnumerator UpdateRandomMovement()
+    protected virtual IEnumerator UpdateRandomMovement()
     {
         yield return new WaitUntil(() => hasEnteredScreen);
         moveDestination = transform.position;
-        while (gameObject.activeInHierarchy)
+        while (gameObject.activeInHierarchy && !isDead)
         {
             float randomX = Random.Range(-screenBounds.x + screenBoundsPadding, screenBounds.x - screenBoundsPadding);
             float randomY = Random.Range(0, screenBounds.y - screenBoundsPadding);
@@ -246,6 +252,7 @@ public class Enemy : MonoBehaviour
         float distance = Vector3.Distance(transform.position, mainCamera.transform.position);
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, distance));
     }
+
 
     private void EnemyDieScore(EnemyType type)
     {
