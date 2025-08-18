@@ -14,8 +14,9 @@ public class GameClearManager : MonoBehaviour
     void Start()
     {
         StartCoroutine(GameOverAction());
-        score = SettingMenu.currentScore;
+        score = AudioManagerScript.currentScore;
         AudioManagerScript.Instance.PlayBgm(4);
+        FinalScore();
     }
 
     private void FinalScore()
