@@ -9,19 +9,19 @@ public class GameOverManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     private float score;
     private int index;
-
-
     void Start()
     {
         StartCoroutine(GameOverAction());
-        score = SettingMenu.currentScore;
+        score = AudioManagerScript.currentScore;
         AudioManagerScript.Instance.PlayBgm(5);
+        FinalScore();
     }
 
     private void FinalScore()
     {
         scoreText.text = "Final Score : " + Mathf.FloorToInt(score);
     }
+
     public void ExitGame()
     {
         StartCoroutine(GoToExitGame(1f));

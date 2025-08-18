@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 public class AudioManagerScript : MonoBehaviour
 {
-    public static AudioManagerScript Instance { get; private set; }
+    public static AudioManagerScript Instance;
     public AudioSource bgmSource;
     public AudioSource objectPoolSFX;
     public AudioSource clikeUiSFX;
@@ -20,6 +20,7 @@ public class AudioManagerScript : MonoBehaviour
     public TextMeshProUGUI scoreText;
     private int poolSize = 5;
     private bool isBulletPlaying = false;
+    public static float currentScore;
 
     void Awake()
     {
@@ -48,12 +49,12 @@ public class AudioManagerScript : MonoBehaviour
     }
     public void AddScore(float point)
     {
-        SettingMenu.currentScore += point * Time.deltaTime;
+        currentScore += point * Time.deltaTime;
         UpdateScoreText();
     }
     void UpdateScoreText()
     {
-        scoreText.text = "Score : " + Mathf.FloorToInt(SettingMenu.currentScore);
+        scoreText.text = "Score : " + Mathf.FloorToInt(currentScore);
     }
 
     public void SetMasterVolume(float volume)

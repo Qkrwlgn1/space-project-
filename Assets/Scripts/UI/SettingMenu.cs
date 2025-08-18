@@ -7,7 +7,6 @@ using System.Collections;
 public class SettingMenu : MonoBehaviour
 {
     [Header("Score")]
-    public static float currentScore;
     public static float finalScore;
     public float scorePerSecond = 1;
     public TextMeshProUGUI scoreText;
@@ -27,7 +26,7 @@ public class SettingMenu : MonoBehaviour
     void Start()
     {
         scoreText.gameObject.SetActive(false);
-        currentScore = 0f;
+        AudioManagerScript.currentScore = 0f;
     }
 
 
