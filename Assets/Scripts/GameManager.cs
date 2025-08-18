@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        Application.targetFrameRate = 60;
         instance = this;
         isGameStarted = false;
     }
@@ -63,7 +64,7 @@ public class GameManager : MonoBehaviour
         itemBack.SetActive(true);
         yield return new WaitForSecondsRealtime(1f);
 
-        if (playerCon != null) playerCon.Next(); // PlayerController�� Next() ȣ��
+        if (playerCon != null) playerCon.Next();
 
         statusBars.SetActive(true);
     }
