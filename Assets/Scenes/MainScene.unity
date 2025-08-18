@@ -10529,7 +10529,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scorePerSecond: 10
   scoreText: {fileID: 57017672}
-  settingMenu: {fileID: 1736913917}
   _menu:
   - {fileID: 304359535}
   - {fileID: 1866853757}
@@ -11901,7 +11900,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1ecd04c15717e314282bf193a68f6857, type: 3}
   _audioUISfx: {fileID: 8300000, guid: 4bcda8eaa373c3e4aabf6d9ecf574c1f, type: 3}
   audioMixer: {fileID: 24100000, guid: 4b29208b321d320429be3c67eddb4006, type: 2}
+  sfxGroup: {fileID: -8660551909579355078, guid: 4b29208b321d320429be3c67eddb4006, type: 2}
   obj: {fileID: 2056953550}
+  scoreText: {fileID: 57017672}
 --- !u!82 &2056953555
 AudioSource:
   m_ObjectHideFlags: 0

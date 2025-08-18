@@ -11,7 +11,6 @@ public class SettingMenu : MonoBehaviour
     public static float finalScore;
     public float scorePerSecond = 1;
     public TextMeshProUGUI scoreText;
-    public GameObject settingMenu;
 
     [Header("Menu")]
     public GameObject[] _menu;
@@ -27,10 +26,8 @@ public class SettingMenu : MonoBehaviour
 
     void Start()
     {
-        DontDestroyOnLoad(settingMenu);
         scoreText.gameObject.SetActive(false);
         currentScore = 0f;
-        UpdateScoreText();
     }
 
 
@@ -38,18 +35,10 @@ public class SettingMenu : MonoBehaviour
     {
         if (GameManager.instance.isGameStarted)
         {
-            AddScore(scorePerSecond);
+            AudioManagerScript.Instance.AddScore(scorePerSecond);
         }
     }
-    public void AddScore(float point)
-    {
-        currentScore += point * Time.deltaTime;
-        UpdateScoreText();
-    }
-    void UpdateScoreText()
-    {
-        scoreText.text = "Score : " + Mathf.FloorToInt(currentScore);
-    }
+    
 
     public void SetFullScreen(bool isFull)
     {
