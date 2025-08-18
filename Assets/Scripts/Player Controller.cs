@@ -251,7 +251,6 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator AutoFireBullet()
     {
-        AudioManagerScript.Instance.PlayerSFX(2);
         while (true)
         {
             if (GameManager.instance != null && !GameManager.instance.isLive) { yield return null; continue; }
@@ -268,6 +267,8 @@ public class PlayerController : MonoBehaviour
 
     private void FireBullet(Transform spawnPoint)
     {
+        AudioManagerScript.Instance.PlayerSFX(2);
+
         if (spawnPoint == null) return;
         GameObject bulletObj = ObjectPooler.Instance.SpawnFromPool(bulletTag, spawnPoint.position, Quaternion.identity);
         if (bulletObj == null) return;

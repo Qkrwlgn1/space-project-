@@ -271,9 +271,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyHealth: 50
+  enemyCurrentHealth: 0
   explosionEffectTag: EnemyExplosion
   enemyBulletTag: EnemyBullet
   dropItemTag: Item
+  enemyType: 2
   enemyFireDelay: 1
   predictionTime: 0.5
   isDropItem: 1
